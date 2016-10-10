@@ -50,6 +50,10 @@ div {
     text-align: center;
 }
 
+a {
+    text-decoration: none;
+}
+
 input, select {
     padding: 8px 10px;
     margin: 3px 0px;

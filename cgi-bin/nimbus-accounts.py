@@ -2,34 +2,52 @@
 
 import cgitb
 import cgi
-# import sqlite3
+import sqlite3
 
 cgitb.enable()
 
-user_form = cgi.FieldStorage()
-
+# create HTML and CSS stub, to be populated with results from database
 print 'Content-Type: text/html'
 print
-
 print '''<html>
-  <head>
-    <title>Nimbus Syllabus Response</title>
-  </head>
-  <body>
+	<head>
+		<title>Nimbus Syllabus</title>
+		<link rel="stylesheet" type="text/css" href="../NimbusSyllabus/style.css">
+		<link rel="shortcut icon" type="image/png" href="../favicon.png">
+		<link rel="icon" type="image/png" href="../NimbusSyllabus/favicon.png">
+	</head>
+    <body>
+        <a href="http://insanj.com/NimbusSyllabus"><img src="../NimbusSyllabus/colored_icon.png" />
+		<h3>Welcome to</h3>
+		<h1>Nimbus Syllabus</h1></a>
+
+		<hr/>
 '''
+
+# retrieve form data from GET request
+user_form = cgi.FieldStorage()
 
 username = user_form['username_field'].value
 password = user_form['password_field'].value
 
-# conn = sqlite3.connect('pizza_orders.db')
-# c = conn.cursor()
-# c.execute('insert into pizza_orders values (?,?,?,?,?,?)', (name, size, crust, str(toppings), phone, ccn))
+# connect to database, if exists
+conn = sqlite3.connect('nimbus.db') # automatically creates file if doesn't exist
+c = conn.cursor()
 
-# conn.commit()
-# conn.close()
+c.execute('CREATE TABLE IF NOT EXISTS accounts(id INTEGER primary key, username varchar(250), password varchar(250))')
+c.execute('SELECT * FROM accounts WHERE username=?', (username,))
+existing_accounts = c.fetchall()
 
-print '<h1>You created a Account!!!!</h1>'
-print '<h2>Your ' + username + ' with password ' + password + '</h2>'
+if len(existing_accounts) > 0:
+	print 'Account already exists with username ' + username + '.'
+else:
+	c.execute('INSERT INTO accounts (username, password) VALUES (?, ?)', (username, password))
+	print 'Created new account with username ' + username + '.'
+
+# complete database connection and HTML/CSS stub
+conn.commit()
+conn.close()
+
 print '''
   </body>
 </html>
