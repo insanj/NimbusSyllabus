@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 
 import cgitb
 import cgi
@@ -12,12 +12,12 @@ print
 print '''<html>
 	<head>
 		<title>Nimbus Syllabus</title>
-		<link rel="stylesheet" type="text/css" href="../NimbusSyllabus/style.css">
+		<link rel="stylesheet" type="text/css" href="../style.css">
 		<link rel="shortcut icon" type="image/png" href="../favicon.png">
-		<link rel="icon" type="image/png" href="../NimbusSyllabus/favicon.png">
+		<link rel="icon" type="image/png" href="../favicon.png">
 	</head>
     <body>
-        <a href="http://insanj.com/NimbusSyllabus"><img src="../NimbusSyllabus/colored_icon.png" />
+        <a href="http://nimsyllabus.com"><img src="../colored_icon.png" />
 		<h3>Welcome to</h3>
 		<h1>Nimbus Syllabus</h1></a>
 
