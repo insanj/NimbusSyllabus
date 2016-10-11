@@ -3,6 +3,8 @@
 import cgitb
 import cgi
 import sqlite3
+import hashlib
+import datetime
 
 cgitb.enable()
 
@@ -34,14 +36,20 @@ password = user_form['password_field'].value
 conn = sqlite3.connect('nimbus.db') # automatically creates file if doesn't exist
 c = conn.cursor()
 
-c.execute('CREATE TABLE IF NOT EXISTS accounts(id INTEGER primary key, username varchar(250), password varchar(250))')
+c.execute('CREATE TABLE IF NOT EXISTS accounts(id INTEGER primary key, username varchar(250), password varchar(250), timestamp datetime)')
 c.execute('SELECT * FROM accounts WHERE username=?', (username,))
 existing_accounts = c.fetchall()
 
 if len(existing_accounts) > 0:
 	print 'Account already exists with username ' + username + '.'
 else:
-	c.execute('INSERT INTO accounts (username, password) VALUES (?, ?)', (username, password))
+	current_time = datetime.datetime.now()
+	salt = str(current_time)
+	hasher = hashlib.md5()
+	hasher.update(password)
+	hasher.update(salt)
+	encrypted_password = hasher.hexdigest()
+	c.execute('INSERT INTO accounts (username, password, timestamp) VALUES (?, ?, ?)', (username, encrypted_password, current_time))
 	print 'Created new account with username ' + username + '.'
 
 # complete database connection and HTML/CSS stub
