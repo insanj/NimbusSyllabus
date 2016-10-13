@@ -5,26 +5,27 @@ import cgi
 import sqlite3
 import hashlib
 import datetime
+import urllib
 
 cgitb.enable()
 
 # create HTML and CSS stub, to be populated with results from database
-print 'Content-Type: text/html'
-print
-print '''<html>
-	<head>
-		<title>Nimbus Syllabus</title>
-		<link rel="stylesheet" type="text/css" href="../style.css">
-		<link rel="shortcut icon" type="image/png" href="../favicon.png">
-		<link rel="icon" type="image/png" href="../favicon.png">
-	</head>
-    <body>
-        <a href="http://nimsyllabus.com"><img src="../colored_icon.png" />
-		<h3>Welcome to</h3>
-		<h1>Nimbus Syllabus</h1></a>
-
-		<hr/>
-'''
+#print 'Content-Type: text/html'
+#print
+#print '''<html>
+#	<head>
+#		<title>Nimbus Syllabus</title>
+#		<link rel="stylesheet" type="text/css" href="../style.css">
+#		<link rel="shortcut icon" type="image/png" href="../favicon.png">
+#		<link rel="icon" type="image/png" href="../favicon.png">
+#	</head>
+ #   <body>
+  #      <a href="http://nimsyllabus.com"><img src="../colored_icon.png" />
+	#	<h3>Welcome to</h3>
+	#	<h1>Nimbus Syllabus</h1></a>
+#
+#		<hr/>
+#'''
 
 # retrieve form data from GET request
 user_form = cgi.FieldStorage()
@@ -40,8 +41,10 @@ c.execute('CREATE TABLE IF NOT EXISTS accounts(id INTEGER primary key, username 
 c.execute('SELECT * FROM accounts WHERE username=?', (username,))
 existing_accounts = c.fetchall()
 
+result_string = '<br/><hr/>'
+
 if len(existing_accounts) > 0:
-	print 'Account already exists with username ' + username + '.'
+	result_string += 'Account already exists with username <b>' + username + '</b>.'
 else:
 	current_time = datetime.datetime.now()
 	salt = str(current_time)
@@ -50,13 +53,21 @@ else:
 	hasher.update(salt)
 	encrypted_password = hasher.hexdigest()
 	c.execute('INSERT INTO accounts (username, password, timestamp) VALUES (?, ?, ?)', (username, encrypted_password, current_time))
-	print 'Created new account with username ' + username + '.'
+	result_string += 'Created new account with username <b>' + username + '</b>.'
+
+# read original HTML page and insert stylized result_string
+# original_page_request = urllib2.Request()
+original_page = urllib.urlopen('http://nimsyllabus.com/index.html')
+original_page_text = original_page.read()
+augmented_text = original_page_text.replace('</body>', result_string + '</body>')
+print 'Content-Type: text/html\n\n' + augmented_text
 
 # complete database connection and HTML/CSS stub
 conn.commit()
 conn.close()
 
-print '''
-  </body>
-</html>
-'''
+#print '''
+#  </body>
+#</html>
+#'''
+
