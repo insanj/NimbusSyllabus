@@ -1,9 +1,11 @@
 body {
-    background-color: #343434;
-    margin: 100px;
+    background-color: #FDF5FF;
+    min-width: 600px;
 
     font-family: "HelveticaNeue", HelveticaNeue, Arial, sans-serif;
-    color: white;
+    color: black;
+
+    text-align: center;
 }
 
 img {
@@ -13,7 +15,7 @@ img {
     color: white;
     float: right;
 
-    margin-left: 50px;
+    margin: 0px 50px 0px 50px;
 }
 
 h1 {
@@ -36,18 +38,30 @@ h3 {
     margin: 0px;
 }
 
-hr {
-    background-color: #F8F8F8;
-    border-style: none;
-    border-radius: 1px;
-
-    margin: 20px 0px 25px 0px;
-
-    height: 3px;
-}
-
 div {
     text-align: center;
+}
+
+.header {
+    background-color: #343434;
+    width: 100%;
+
+    margin: -10px 0px 20px -10px;
+    padding: 20px 20px 20px 0px; /* top right bottom left */
+}
+
+.footer {
+    margin-bottom: 200px;
+}
+
+.signup {
+    float: left;
+    width: 50%;
+}
+
+.login {
+    float: right;
+    width: 50%;
 }
 
 a {
@@ -64,10 +78,10 @@ input, select {
 }
 
 input[type=submit] {
-    background-color: #D4BBFF;
-    color: #343434;
+    background-color: #6E89E0;
+    color: white;
 
-    padding: 5px 20px;
+    padding: 10px 20px;
     margin: 8px 0;
 
     border: none;
@@ -79,5 +93,5 @@ input[type=submit] {
 }
 
 input[type=submit]:hover {
-    background-color: #E7D8FF;
+    background-color: #9DADE0;
 }
