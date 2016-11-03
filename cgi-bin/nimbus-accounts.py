@@ -6,9 +6,13 @@ import sqlite3
 import hashlib
 import datetime
 import urllib
+import Cookie
+import os
+from random import randint
 
 cgitb.enable()
 
+stored_cookie_string = os.environ.get('HTTP_COOKIE') #look for a cookie
 # retrieve form data from GET request
 user_form = cgi.FieldStorage()
 
@@ -48,6 +52,13 @@ else:
 				encrypted_password = hasher.hexdigest()
 				c.execute('INSERT INTO accounts (username, password, timestamp) VALUES (?, ?, ?)', (username, encrypted_password, current_time))
 				result_string += 'Created new account with username <b>' + username + '</b>.'
+				
+				cookie = Cookie.SimpleCookie()
+   				cookie['current_time'] = current_time
+    				cookie['username'] = username
+				token = randint(0,99999999)
+    				cookie['token'] = token
+				print cookie # important thing
 	else:
 		c.execute('SELECT * FROM accounts WHERE username=?', (username,))
 		existing_account = c.fetchone()
