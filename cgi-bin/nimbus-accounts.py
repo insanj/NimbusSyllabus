@@ -13,6 +13,18 @@ from random import randint
 cgitb.enable()
 
 stored_cookie_string = os.environ.get('HTTP_COOKIE') #look for a cookie
+
+if stored_cookie_string:
+	cookie = Cookie.SimpleCookie(stored_cookie_string)
+	if 'token' in cookie and 'username' in cookie:
+		c.execute('SELECT * FROM cookies WHERE username=?', (cookie['username'],))
+		cookieUser = c.fetchall()
+		tokenData = cookieUser[3]
+		if tokenData == cookie['token']:
+			load_content_page = True
+			result_string += 'Logged in! Cookies are Great!:)'
+			
+			
 # retrieve form data from GET request
 user_form = cgi.FieldStorage()
 
@@ -60,6 +72,10 @@ else:
     				cookie['username'] = username
 				token = randint(0,99999999)
     				cookie['token'] = token
+				
+				c.execute('CREATE TABLE IF NOT EXISTS cookies(id INTEGER primary key, username varchar(250), token int)')
+				c.execute('INSERT INTO cookies(username, token) VALUES (?,?,?)', (username, token))
+			
 				print cookie # important thing
 	else:
 		c.execute('SELECT * FROM accounts WHERE username=?', (username,))
