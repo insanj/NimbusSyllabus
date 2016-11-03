@@ -24,6 +24,7 @@ if not 'username_field' in user_form or not 'password_field' in user_form:
 else:
 	username = user_form['username_field'].value
 	password = user_form['password_field'].value
+	load_content_page = False
 
 	submit_value = user_form['submit'].value 
 	result_string = '<br/><hr/>'
@@ -52,7 +53,8 @@ else:
 				encrypted_password = hasher.hexdigest()
 				c.execute('INSERT INTO accounts (username, password, timestamp) VALUES (?, ?, ?)', (username, encrypted_password, current_time))
 				result_string += 'Created new account with username <b>' + username + '</b>.'
-				
+				load_content_page = True
+
 				cookie = Cookie.SimpleCookie()
    				cookie['current_time'] = current_time
     				cookie['username'] = username
@@ -75,13 +77,19 @@ else:
 			existing_encrypted_password = existing_account[2]
 
 			if given_encrypted_password == existing_encrypted_password:
+				load_content_page = True
 	 			result_string += 'Logged in! Welcome back :)'
 	 		else:
 	 			result_string += 'Incorrect password for account, try again please!'
 
 	# read original HTML page and insert stylized result_string
 	# original_page_request = urllib2.Request()
-	original_page = urllib.urlopen('http://nimsyllabus.com/index.html')
+	page_url = 'http://nimsyllabus.com/index.html'
+
+	if load_content_page:
+		page_url = 'http://nimsyllabus.com/content.html'
+		
+	original_page = urllib.urlopen(page_url)
 	original_page_text = original_page.read()
 	augmented_text = original_page_text.replace('</body>', result_string + '</body>')
 	print 'Content-Type: text/html\n\n' + augmented_text
