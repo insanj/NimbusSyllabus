@@ -15,14 +15,14 @@
 				while (c.charAt(0) == ' ') {
                    		c = c.substring(1);
                 	}
-                	if (c.indexOf(name) == 0) {
+                	if (c.indexOf(cookiepart) == 0) {
                 	//if the cookie is found return cookie
                     		return c.substring(cookiepart.length, c.length);
                 	}
                 	return null;
                 	}
     
-           	var isCookie = lookCookie('username')
+           	var isCookie = lookCookie('current_time')
             	if(isCookie) {
                 	document.location.href = 'http://nimsyllabus.com/content.html';
             	}
