@@ -13,22 +13,38 @@ from random import randint
 cgitb.enable()
 
 stored_cookie_string = os.environ.get('HTTP_COOKIE') #look for a cookie
-
-if stored_cookie_string:
-	cookie = Cookie.SimpleCookie(stored_cookie_string)
-	if 'token' in cookie and 'username' in cookie:
-		c.execute('SELECT * FROM cookies WHERE username=?', (cookie['username'],))
-		cookieUser = c.fetchall()
-		tokenData = cookieUser[3]
-		if tokenData == cookie['token']:
-			load_content_page = True
-			result_string += 'Logged in! Cookies are Great!:)'
-			
-			
 # retrieve form data from GET request
 user_form = cgi.FieldStorage()
 
-if not 'username_field' in user_form or not 'password_field' in user_form:
+submit_value = user_form['submit'].value 
+
+if submit_value == '+ New Group':
+	conn = sqlite3.connect('nimbus.db') # automatically creates file if doesn't exist
+	c = conn.cursor()
+	
+	username = 'meow'
+	group_name = user_form['group_name'].value 
+	group_color = user_form['group_color'].value 
+	current_time = datetime.datetime.now()
+
+	c.execute('CREATE TABLE IF NOT EXISTS groups(id INTEGER primary key, username varchar(250), group_name varchar(250), group_color varchar(250), timestamp datetime)')
+	c.execute('INSERT INTO groups (username, group_name, group_color, timestamp) VALUES (?, ?, ?, ?)', (username, group_name, group_color, current_time))
+	c.execute('SELECT * FROM groups WHERE username=?', (username,))
+
+	result_string = '<br/><br/>'
+	for group in c:
+		result_group_name = group[2]
+		result_group_color = str(group[3])
+		result_string += '<div class="group" style="color:' + result_group_color + '">' + result_group_name + '</div>'
+
+	conn.commit()
+	conn.close()
+
+	original_page = urllib.urlopen('http://nimsyllabus.com/content.html')
+	original_page_text = original_page.read()
+	augmented_text = original_page_text.replace('</body>', result_string + '</body>')
+	print 'Content-Type: text/html\n\n' + augmented_text
+elif not 'username_field' in user_form or not 'password_field' in user_form:
 	original_page = urllib.urlopen('http://nimsyllabus.com/index.html')
 	original_page_text = original_page.read()
 	augmented_text = original_page_text.replace('</body>', "Invalid username or password given. Try again please!" + '</body>')
@@ -38,8 +54,7 @@ else:
 	password = user_form['password_field'].value
 	load_content_page = False
 
-	submit_value = user_form['submit'].value 
-	result_string = '<br/><hr/>'
+	result_string = '<br/>'
 
 	# connect to database, if exists
 	conn = sqlite3.connect('nimbus.db') # automatically creates file if doesn't exist
@@ -72,10 +87,6 @@ else:
     				cookie['username'] = username
 				token = randint(0,99999999)
     				cookie['token'] = token
-				
-				c.execute('CREATE TABLE IF NOT EXISTS cookies(id INTEGER primary key, username varchar(250), token int)')
-				c.execute('INSERT INTO cookies(username, token) VALUES (?,?,?)', (username, token))
-			
 				print cookie # important thing
 	else:
 		c.execute('SELECT * FROM accounts WHERE username=?', (username,))
@@ -84,6 +95,8 @@ else:
 		if not existing_account:
 			result_string += 'Account not found.'
 		else:
+ 			result_string += '<br/><br/>Logged in! Welcome back :)'
+
 			existing_timestamp = existing_account[3]
 			salt = str(existing_timestamp)
 			hasher = hashlib.md5()
@@ -94,7 +107,13 @@ else:
 
 			if given_encrypted_password == existing_encrypted_password:
 				load_content_page = True
-	 			result_string += 'Logged in! Welcome back :)'
+
+				c.execute('SELECT * FROM groups WHERE username=?', (username,))
+
+				for group in c:
+					result_group_name = group[2]
+					result_group_color = str(group[3])
+					result_string += '<div class="group" style="color:' + result_group_color + '">' + result_group_name + '</div>'
 	 		else:
 	 			result_string += 'Incorrect password for account, try again please!'
 
