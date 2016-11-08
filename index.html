@@ -7,31 +7,36 @@
 		<link rel="icon" type="image/png" href="http://nimsyllabus.com/favicon.png">
 		
 		<script language="javascript">
-            		function lookCookie(name){
-                		var cookiepart = name + "=";
-         	       		var ca = document.cookie.split(';');
-        	        	for(var i = 0; i < ca.length; i++) {
-                			var c = ca[i];
+            function lookCookie(name){
+                var cookiepart = name + "=";
+         	    var ca = document.cookie.split(';');
+        	    for (var i = 0; i < ca.length; i++) {
+                	var c = ca[i];
 					while (c.charAt(0) == ' ') {
-                   				c = c.substring(1);
-                			}
-                		if (c.indexOf(cookiepart) == 0) {
+                   		c = c.substring(1);
+                	}
+                	
+                	if (c.indexOf(cookiepart) == 0) {
                 		//if the cookie is found return cookie
-                    			return c.substring(cookiepart.length, c.length);
-                		}
-                		return null;
-                		}
+                    	return c.substring(cookiepart.length, c.length);
+                	}
+                	
+                	return "";
+                }
 			}
-    
-           	var isCookie = lookCookie('current_time')
-            	if(isCookie) {
-                	document.location.href = 'http://nimsyllabus.com/content.html';
-            	}
-        	</script>
+
+			function loginIfPossible() {
+	           	var username = lookCookie('account_cookie');
+
+	            if (username && username.length > 0) {
+	                document.location.href = 'http://nimsyllabus.com/cgi-bin/nimbus-accounts.py?submit=Cookie+Login&username=' + username;
+	            }
+			}
+           	
+        </script>
 	</head>
 
-	<body>
-
+	<body onload="loginIfPossible()">
 		<div class="header">
 			<a href="http://nimsyllabus.com"><img src="http://nimsyllabus.com/colored_icon.png" />
 			<h3>Welcome to</h3>
