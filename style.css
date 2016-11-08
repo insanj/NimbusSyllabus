@@ -42,6 +42,10 @@ div {
     text-align: center;
 }
 
+a:hover {
+    opacity: 0.8;
+}
+
 .header {
     background-color: #343434;
     width: 100%;

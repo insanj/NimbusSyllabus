@@ -9,6 +9,7 @@ import urllib
 import Cookie
 import os
 from random import randint
+#import cookielib
 
 cgitb.enable()
 
@@ -18,7 +19,19 @@ user_form = cgi.FieldStorage()
 
 submit_value = user_form['submit'].value 
 
-if submit_value == 'Cookie Login':
+if submit_value == 'Logout':
+	expiring_cookie = Cookie.SimpleCookie()
+	expiring_cookie['account_cookie'] = 'yes it should'
+	expiring_cookie['account_cookie']['expires'] = 'Thu, 01 Jan 1970 00:00:00 GMT'
+	expiring_cookie['account_cookie']['path'] = '/'
+	print expiring_cookie
+	#cookielib.CookieJar().clear('nimsyllabus.com')
+
+	original_page = urllib.urlopen('http://nimsyllabus.com/index.html')
+	original_page_text = original_page.read()
+	augmented_text = original_page_text.replace('</body>', "Logged out. See you soon!" + '</body>')
+	print 'Content-Type: text/html\n\n' + augmented_text
+elif submit_value == 'Cookie Login':
 	conn = sqlite3.connect('nimbus.db') # automatically creates file if doesn't exist
 	c = conn.cursor()
 	

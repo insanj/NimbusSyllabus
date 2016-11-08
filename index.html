@@ -7,6 +7,8 @@
 		<link rel="icon" type="image/png" href="http://nimsyllabus.com/favicon.png">
 		
 		<script language="javascript">
+			window.onload = loginIfPossible()
+
             function lookCookie(name){
                 var cookiepart = name + "=";
          	    var ca = document.cookie.split(';');
@@ -36,7 +38,7 @@
         </script>
 	</head>
 
-	<body onload="loginIfPossible()">
+	<body>
 		<div class="header">
 			<a href="http://nimsyllabus.com"><img src="http://nimsyllabus.com/colored_icon.png" />
 			<h3>Welcome to</h3>
