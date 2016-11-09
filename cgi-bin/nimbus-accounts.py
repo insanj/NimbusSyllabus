@@ -4,12 +4,37 @@ import cgitb
 import cgi
 import sqlite3
 import hashlib
+import time
 import datetime
 import urllib
 import Cookie
 import os
 from random import randint
 #import cookielib
+
+
+def groupsHTMLForUsername(username):
+	conn = sqlite3.connect('nimbus.db') # automatically creates file if doesn't exist
+	c = conn.cursor()
+	c.execute('SELECT * FROM groups WHERE username=?', (username,))
+
+	result_string = '<br/><br/>'
+	group_i = 0
+	for group in c:
+		group_i = group_i + 1
+		result_group_name = group[2]
+		result_group_color = str(group[3])
+		result_group_timestamp = str(group[4])
+		result_group_timeconverted = time.mktime(time.strptime(result_group_timestamp, '%Y-%m-%d %H:%M:%S.%f')) # time.mktime(time.strptime(result_group_timestamp, '%Y-%m-%d %H:%M:%S').timetuple())
+		result_group_timestring = datetime.datetime.fromtimestamp(result_group_timeconverted).strftime('%d/%m/%Y')
+
+		# result_group_timestring = result_group_timeconverted.strftime("%d/%m/%y")
+		result_string += '<div class="group" style="color:' + result_group_color + '"><div class="group_number">' + str(group_i) + '</div>' + result_group_name + '<p class="group_subtitle"> Created ' + result_group_timestring + '</p></div>'
+
+	conn.commit()
+	conn.close()
+
+	return result_string
 
 cgitb.enable()
 
@@ -29,7 +54,7 @@ if submit_value == 'Logout':
 
 	original_page = urllib.urlopen('http://nimsyllabus.com/index.html')
 	original_page_text = original_page.read()
-	augmented_text = original_page_text.replace('</body>', "Logged out. See you soon!" + '</body>')
+	augmented_text = original_page_text.replace('</body>', '<div class="message">Logged out. See you soon!</div>' + '</body>')
 	print 'Content-Type: text/html\n\n' + augmented_text
 elif submit_value == 'Cookie Login':
 	conn = sqlite3.connect('nimbus.db') # automatically creates file if doesn't exist
@@ -39,16 +64,10 @@ elif submit_value == 'Cookie Login':
 	current_time = datetime.datetime.now()
 
 	c.execute('CREATE TABLE IF NOT EXISTS groups(id INTEGER primary key, username varchar(250), group_name varchar(250), group_color varchar(250), timestamp datetime)')
-	c.execute('SELECT * FROM groups WHERE username=?', (username,))
-
-	result_string = '<br/><br/>'
-	for group in c:
-		result_group_name = group[2]
-		result_group_color = str(group[3])
-		result_string += '<div class="group" style="color:' + result_group_color + '">' + result_group_name + '</div>'
-
 	conn.commit()
 	conn.close()
+
+	result_string = groupsHTMLForUsername(username)
 
 	original_page = urllib.urlopen('http://nimsyllabus.com/content.html')
 	original_page_text = original_page.read()
@@ -58,14 +77,14 @@ elif submit_value == '+ New Group':
 	if not stored_cookie_string:
 		original_page = urllib.urlopen('http://nimsyllabus.com/index.html')
 		original_page_text = original_page.read()
-		augmented_text = original_page_text.replace('</body>', "Cannot find logged in account, please log in again." + '</body>')
+		augmented_text = original_page_text.replace('</body>', '<div class="message">Cannot find logged in account, please log in again.</div>' + '</body>')
 		print 'Content-Type: text/html\n\n' + augmented_text
 	else:		
 		cookie = Cookie.SimpleCookie(stored_cookie_string)
 		if not 'account_cookie' in cookie:	
 			original_page = urllib.urlopen('http://nimsyllabus.com/index.html')
 			original_page_text = original_page.read()
-			augmented_text = original_page_text.replace('</body>', "Cannot find username for current account, please log in again." + '</body>')
+			augmented_text = original_page_text.replace('</body>', '<div class="message">Cannot find username for current account, please log in again.</div>' + '</body>')
 			print 'Content-Type: text/html\n\n' + augmented_text
 		else:
 			username = cookie['account_cookie'].value
@@ -85,17 +104,10 @@ elif submit_value == '+ New Group':
 
 			c.execute('CREATE TABLE IF NOT EXISTS groups(id INTEGER primary key, username varchar(250), group_name varchar(250), group_color varchar(250), timestamp datetime)')
 			c.execute('INSERT INTO groups (username, group_name, group_color, timestamp) VALUES (?, ?, ?, ?)', (username, group_name, group_color, current_time))
-			c.execute('SELECT * FROM groups WHERE username=?', (username,))
-
-			result_string = '<br/><br/>'
-			for group in c:
-				result_group_name = group[2]
-				result_group_color = str(group[3])
-				result_string += '<div class="group" style="color:' + result_group_color + '">' + result_group_name + '</div>'
-
 			conn.commit()
 			conn.close()
 
+			result_string = groupsHTMLForUsername(username)
 			original_page = urllib.urlopen('http://nimsyllabus.com/content.html')
 			original_page_text = original_page.read()
 			augmented_text = original_page_text.replace('</body>', result_string + '</body>')
@@ -103,14 +115,14 @@ elif submit_value == '+ New Group':
 elif not 'username_field' in user_form or not 'password_field' in user_form:
 	original_page = urllib.urlopen('http://nimsyllabus.com/index.html')
 	original_page_text = original_page.read()
-	augmented_text = original_page_text.replace('</body>', "Invalid username or password given. Try again please!" + '</body>')
+	augmented_text = original_page_text.replace('</body>', '<div class="message">Invalid username or password given. Try again please!</div>' + '</body>')
 	print 'Content-Type: text/html\n\n' + augmented_text
 else:
 	username = user_form['username_field'].value
 	password = user_form['password_field'].value
 	load_content_page = False
 
-	result_string = '<br/>'
+	result_string = ''
 
 	# connect to database, if exists
 	conn = sqlite3.connect('nimbus.db') # automatically creates file if doesn't exist
@@ -119,14 +131,14 @@ else:
 	if submit_value == 'Sign Up':
 		confirm_password = user_form['confirm_password_field'].value
 		if confirm_password != password:
-			result_string += 'Passwords do not match, please try again!'
+			result_string += '<div class="message">Passwords do not match, please try again!</div>'
 		else:
 			c.execute('CREATE TABLE IF NOT EXISTS accounts(id INTEGER primary key, username varchar(250), password varchar(250), timestamp datetime)')
 			c.execute('SELECT * FROM accounts WHERE username=?', (username,))
 			existing_accounts = c.fetchall()
 
 			if len(existing_accounts) > 0:
-				result_string += 'Account already exists with username <b>' + username + '</b>.'
+				result_string += '<div class="message">Account already exists with username <b>' + username + '</b>.</div>'
 			else:
 				current_time = datetime.datetime.now()
 				salt = str(current_time)
@@ -135,7 +147,7 @@ else:
 				hasher.update(salt)
 				encrypted_password = hasher.hexdigest()
 				c.execute('INSERT INTO accounts (username, password, timestamp) VALUES (?, ?, ?)', (username, encrypted_password, current_time))
-				result_string += 'Created new account with username <b>' + username + '</b>.'
+				result_string += '<div class="message">Created new account with username <b>' + username + '</b>.</div>'
 				load_content_page = True
 
 				cookie = Cookie.SimpleCookie()
@@ -160,7 +172,7 @@ else:
 
 			if given_encrypted_password == existing_encrypted_password:
 				load_content_page = True
- 				result_string += '<br/><br/>Logged in! Welcome back :)'
+ 				result_string += '<br/><br/><div class="message">Logged in! Welcome back :)</div>'
 
  				cookie = Cookie.SimpleCookie()
  				#cookie['path'] = cookie_path
@@ -179,12 +191,7 @@ else:
 
 				print cookie # important thing
 
-				c.execute('SELECT * FROM groups WHERE username=?', (username,))
-
-				for group in c:
-					result_group_name = group[2]
-					result_group_color = str(group[3])
-					result_string += '<div class="group" style="color:' + result_group_color + '">' + result_group_name + '</div>'
+				result_string += groupsHTMLForUsername(username)
 	 		else:
 	 			result_string += 'Incorrect password for account, try again please!'
 
