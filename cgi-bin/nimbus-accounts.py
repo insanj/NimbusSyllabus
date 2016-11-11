@@ -18,7 +18,7 @@ def groupsHTMLForUsername(username):
 	c = conn.cursor()
 	c.execute('SELECT * FROM groups WHERE username=?', (username,))
 
-	result_string = '<br/><br/>'
+	result_string = ''
 	group_i = 0
 	for group in c:
 		group_i = group_i + 1
@@ -172,7 +172,7 @@ else:
 
 			if given_encrypted_password == existing_encrypted_password:
 				load_content_page = True
- 				result_string += '<br/><br/><div class="message">Logged in! Welcome back :)</div>'
+ 				result_string += '<div class="message">Logged in! Welcome back :)</div>'
 
  				cookie = Cookie.SimpleCookie()
  				#cookie['path'] = cookie_path

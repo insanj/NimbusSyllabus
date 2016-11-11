@@ -9,37 +9,41 @@ body {
 }
 
 img {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
 
     color: white;
-    float: right;
+    float: left;
 
-    margin: 0px 50px 0px 50px;
+    margin: 0px 20px 0px 25px;
 }
 
 h1 {
-	font-size: 50px;
-    font-family: "HelveticaNeue-Light", HelveticaNeue-Light, Arial, sans-serif;
+    font-size: 50px;
+    font-family: -apple-system, BlinkMacSystemFont, "HelveticaNeue-Light", HelveticaNeue-Light, Arial, sans-serif;
     font-weight: 300;
+    color: #2b2b2b;
 
-    color: #D4BBFF;
-    margin: 0px;
+    margin: 10px 0px 10px 25px;
 }
 
 h3 {
-	font-size: 25px;
-    font-family: "HelveticaNeue-Ultralight", HelveticaNeue-Ultralight, Arial, sans-serif;
-    font-variant: small-caps;
-    letter-spacing: 3px;
+    font-size: 25px;
+    font-family: -apple-system, BlinkMacSystemFont, "HelveticaNeue-Ultralight", HelveticaNeue-Ultralight, Arial, sans-serif;
+    letter-spacing: 1px;
     font-weight: 300;
+    color: #2b2b2b;
+    opacity: 0.9;
 
-    color: #D4BBFF;
-    margin: 0px;
+    margin: 3px 0px -20px 25px;
 }
 
 div {
     text-align: center;
+}
+
+a {
+    color: #6E89E0 !important;
 }
 
 a:hover {
@@ -47,17 +51,39 @@ a:hover {
 }
 
 .header {
-    background-color: #343434;
-    width: 100%;
+    background-color: #ffffff;
+    text-align: left;
 
+    border-color: #ffffff;
+    border-bottom-style: outset;
+    border-width: 1px;
+
+    width: 100%;
     margin: -10px 0px 20px -10px;
     padding: 20px 20px 20px 0px; /* top right bottom left */
+    opacity: 0.97;
+    position: fixed;
+    z-index: 4;
+}
+
+.logout {
+    float: right;
+    display: inline-block;
+    position: fixed;
+    text-align: right;
+    z-index: 5;
+    
+    top: 50px;
+    right: 20px;
+    
+    left: 500px;
+    height: 100px;
 }
 
 .footer {
+    padding-top: 150px;
     margin-bottom: 50px;
     text-align: center;
-
 }
 
 .signup {
@@ -103,26 +129,33 @@ input[type=submit]:hover {
 }
 
 .group {
-    background-color: white;
+    text-align: left;
 
+    background-color: white;
+    padding-left: 20px;
     padding-top: 10px;
     padding-bottom: 10px;
     margin-bottom: 1px;
     margin-left: -10px;
     margin-right: -10px;
-
     box-shadow: 0px 0px 10px #888888;
-
     font-family: "HelveticaNeue-Light", HelveticaNeue-Light, Arial, sans-serif;
     font-size: 28px;
 }
 
 .group_number {
+    opacity: 0;
     position: absolute;
-    margin-left: 20px;
-
-    color: #FDF5FF;
+    
+    /*color: white;
     max-width: 100px;
+    display: inline-block;
+    margin: 10px;*/
+    
+    /*border-radius: 50%;
+    background-color: #FDF5FF;
+    width: 35px;
+    height: 350x;*/
 }
 
 .group_subtitle {
@@ -133,6 +166,8 @@ input[type=submit]:hover {
     margin: 0px;
     padding: 0px;
     line-height: 14px;
+
+    z-index: 2;
 }
 
 .message {
