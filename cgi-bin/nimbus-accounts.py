@@ -9,6 +9,7 @@ import datetime
 import urllib
 import Cookie
 import os
+# import httplib
 from random import randint
 #import cookielib
 
@@ -16,20 +17,21 @@ from random import randint
 def groupsHTMLForUsername(username):
 	conn = sqlite3.connect('nimbus.db') # automatically creates file if doesn't exist
 	c = conn.cursor()
-	c.execute('SELECT * FROM groups WHERE username=?', (username,))
+	c.execute('SELECT * FROM groups WHERE username=? ORDER BY id DESC', (username,))
 
 	result_string = ''
 	group_i = 0
 	for group in c:
 		group_i = group_i + 1
+		result_group_id = str(group[0])
 		result_group_name = group[2]
 		result_group_color = str(group[3])
 		result_group_timestamp = str(group[4])
 		result_group_timeconverted = time.mktime(time.strptime(result_group_timestamp, '%Y-%m-%d %H:%M:%S.%f')) # time.mktime(time.strptime(result_group_timestamp, '%Y-%m-%d %H:%M:%S').timetuple())
-		result_group_timestring = datetime.datetime.fromtimestamp(result_group_timeconverted).strftime('%d/%m/%Y')
+		result_group_timestring = datetime.datetime.fromtimestamp(result_group_timeconverted).strftime('%m/%d/%Y')
 
 		# result_group_timestring = result_group_timeconverted.strftime("%d/%m/%y")
-		result_string += '<div class="group" style="color:' + result_group_color + '"><div class="group_number">' + str(group_i) + '</div>' + result_group_name + '<p class="group_subtitle"> Created ' + result_group_timestring + '</p></div>'
+		result_string += '<div class="group" id="' + result_group_id + '" style="color:' + result_group_color + '"><div class="group_number">' + str(group_i) + '</div>' + result_group_name + '<p class="group_subtitle"> Created ' + result_group_timestring + '</p></div>'
 
 	conn.commit()
 	conn.close()
@@ -44,7 +46,35 @@ user_form = cgi.FieldStorage()
 
 submit_value = user_form['submit'].value 
 
-if submit_value == 'Logout':
+if submit_value == 'Delete':
+	cookie = Cookie.SimpleCookie(stored_cookie_string)
+	if not 'account_cookie' in cookie:	
+		original_page = urllib.urlopen('http://nimsyllabus.com/index.html')
+		original_page_text = original_page.read()
+		augmented_text = original_page_text.replace('</body>', '<div class="message">Cannot find username for current account, please log in again.</div>' + '</body>')
+		print 'Content-Type: text/html\n\n' + 'No username found'
+	else:
+		username = cookie['account_cookie'].value
+		groupId = user_form['id'].value
+		
+		conn = sqlite3.connect('nimbus.db') # automatically creates file if doesn't exist
+		c = conn.cursor()
+		
+		#c.execute("SELECT * FROM groups WHERE username='?'' AND id=?', (username, groupId))
+		#if c.rowcount <= 0:
+		#	conn.commit()
+		#	conn.close()
+		#	print 'Content-Type: text/html\n\n' + str(c.rowcount) + ' groups found for username=' + username + ' and id=' + groupId
+		#else:
+		c.execute('DELETE FROM groups WHERE username=? AND id=?', (username, groupId))
+		conn.commit()
+		conn.close()
+
+		#result_string = '<div class="message">Deleted group successfully.</div>'
+		#result_string += groupsHTMLForUsername(username)
+
+		print 'Content-Type: text/html\n\nSuccess'
+elif submit_value == 'Logout':
 	expiring_cookie = Cookie.SimpleCookie()
 	expiring_cookie['account_cookie'] = 'yes it should'
 	expiring_cookie['account_cookie']['expires'] = 'Thu, 01 Jan 1970 00:00:00 GMT'

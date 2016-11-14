@@ -2,7 +2,7 @@ body {
     background-color: #FDF5FF;
     min-width: 600px;
 
-    font-family: "HelveticaNeue", HelveticaNeue, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "HelveticaNeue", HelveticaNeue, Arial, sans-serif;
     color: black;
 
     text-align: center;
@@ -121,7 +121,7 @@ input[type=submit] {
     border-radius: 4px;
 
     cursor: pointer;
-    font-family: "HelveticaNeue", HelveticaNeue, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "HelveticaNeue", HelveticaNeue, Arial, sans-serif;
     font-size: 16px;
 }
 
@@ -140,7 +140,7 @@ input[type=submit]:hover {
     margin-left: -10px;
     margin-right: -10px;
     box-shadow: 0px 0px 10px #888888;
-    font-family: "HelveticaNeue-Light", HelveticaNeue-Light, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "HelveticaNeue-Light", HelveticaNeue-Light, Arial, sans-serif;
     font-size: 28px;
 }
 
@@ -160,7 +160,7 @@ input[type=submit]:hover {
 }
 
 .group_subtitle {
-    font-family: "HelveticaNeue-Light", HelveticaNeue-Light, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "HelveticaNeue-Light", HelveticaNeue-Light, Arial, sans-serif;
     font-size: 14px;
     opacity: 0.5;
 
@@ -169,6 +169,27 @@ input[type=submit]:hover {
     line-height: 14px;
 
     z-index: 2;
+}
+
+.group_delete {
+    font-family: "Verdana", Verdana, sans-serif;
+    font-size: 15px;
+
+    margin: -43px 15px 0px 0px;
+    float: right;
+
+    color: #6f8bdd;
+    width: 35px;
+    height: 35px;
+    
+    border-radius: 4px;
+    background-color: #fdf5ff;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.5;
 }
 
 .message {

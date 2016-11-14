@@ -9,7 +9,7 @@
 		<script src="http://nimsyllabus.com/jquery-3.1.1.min.js"></script>
 		<script>
 		$(document).ready(function(){
-			$('#group_form').bind('submit', function () {
+			$('.group_form').bind('submit', function() {
 				var data = $(this).serializeArray();
 
 		        $.ajax({
@@ -21,6 +21,37 @@
 		       		}
 		        });
 		    });
+
+		    $('.group').each(function(i, obj) {
+		    	$(obj).append('<button class="group_delete">X</button>');
+			});
+
+			$('.group_delete').click(function() {
+			    var groupDiv = $(this).parent();
+			    var groupId = groupDiv.attr("id"); /*$(this).attr("id");*/
+			    var groupData = {"submit" : "Delete",
+			    				 "id" : groupId};
+
+				$.ajax({
+		        	url: "http://nimsyllabus.com/cgi-bin/nimbus-accounts.py",
+		        	type: "GET",
+		        	data: groupData,
+		        }).always(function(data, textStatus, jqXHR){
+		        	var trimmedResultString = $.trim(data);
+		        	if(trimmedResultString == 'Success'){
+		        		groupDiv.animate({height: 0, "padding-top" : 0, "padding-bottom" : 0}, function() {
+				        	groupDiv.remove();
+		        		});
+		        	}
+		        	else{
+				    	groupDiv.append('Failed to delete: "' + trimmedResultString + '"');
+		        	}
+	       		});
+	       		/*.fail(function(jqXHR, textStatus, error){
+			    	groupDiv.append('Failed to delete' + error)
+		        });*/
+			});
+
 		});
 		</script>
 
