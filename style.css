@@ -129,6 +129,15 @@ input[type=submit]:hover {
     background-color: #9DADE0;
 }
 
+.group_header {
+    font-family: -apple-system, BlinkMacSystemFont, "HelveticaNeue-Light", HelveticaNeue-Light, Arial, sans-serif;
+    font-size: 18px;
+    text-align: left;
+
+    opacity: 0.5;
+    margin: 8px;
+}
+
 .group {
     text-align: left;
 

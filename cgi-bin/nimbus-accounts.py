@@ -19,8 +19,8 @@ def groupsHTMLForUsername(username):
 	c = conn.cursor()
 	c.execute('SELECT * FROM groups WHERE username=? ORDER BY id DESC', (username,))
 
-	result_string = ''
 	group_i = 0
+	result_string = ''
 	for group in c:
 		group_i = group_i + 1
 		result_group_id = str(group[0])
@@ -33,6 +33,14 @@ def groupsHTMLForUsername(username):
 		# result_group_timestring = result_group_timeconverted.strftime("%d/%m/%y")
 		result_string += '<div class="group" id="' + result_group_id + '" style="color:' + result_group_color + '"><div class="group_number">' + str(group_i) + '</div>' + result_group_name + '<p class="group_subtitle"> Created ' + result_group_timestring + '</p></div>'
 
+	if group_i == 0:
+		result_string += '<div class="message">No groups yet :)</div>'
+	else:
+		group_plural_suffix = 's'
+		if group_i == 1:
+			group_plural_suffix = ''
+		result_string = '<div class="group_header">' + str(group_i) + ' Group' + group_plural_suffix + '</div>' + result_string
+		
 	conn.commit()
 	conn.close()
 
