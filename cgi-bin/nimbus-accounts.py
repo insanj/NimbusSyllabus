@@ -160,7 +160,7 @@ else:
 		existing_account = c.fetchone()
 
 		if not existing_account:
-			result_string += 'Account not found.'
+			result_string += '<div class="message">Account not found.</div>'
 		else:
 			existing_timestamp = existing_account[3]
 			salt = str(existing_timestamp)
@@ -193,7 +193,7 @@ else:
 
 				result_string += groupsHTMLForUsername(username)
 	 		else:
-	 			result_string += 'Incorrect password for account, try again please!'
+	 			result_string += '<div class="message">Incorrect password for account, try again please!</div>'
 
 	# read original HTML page and insert stylized result_string
 	# original_page_request = urllib2.Request()

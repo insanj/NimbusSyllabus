@@ -6,6 +6,24 @@
 		<link rel="shortcut icon" type="image/png" href="http://nimsyllabus.com/favicon.png">
 		<link rel="icon" type="image/png" href="http://nimsyllabus.com/favicon.png">
 
+		<script src="http://nimsyllabus.com/jquery-3.1.1.min.js"></script>
+		<script>
+		$(document).ready(function(){
+			$('#group_form').bind('submit', function () {
+				var data = $(this).serializeArray();
+
+		        $.ajax({
+		        	url: "http://nimsyllabus.com/cgi-bin/nimbus-accounts.py", 
+		        	type: "GET",
+		        	data: data,
+		        	success: function(result){
+		        		$('html').html(result);
+		       		}
+		        });
+		    });
+		});
+		</script>
+
 		<script language="javascript">
 			window.onload = loginIfPossible()
 
@@ -57,7 +75,7 @@
 		<div class="footer">
 			<div class="logout"><a style="color: #57a4ed;" href="http://nimsyllabus.com/cgi-bin/nimbus-accounts.py?submit=Logout">Log out</a></div>
 
-			<form method="get" action="http://nimsyllabus.com/cgi-bin/nimbus-accounts.py?new_group_username=meow">
+			<form class="group_form">
 				<input type="name" placeholder="new group name" name="group_name"/>
 				<input type="color" placeholder="color" name="group_color"/><br/>
 				<input type="submit" name="submit" value="+ New Group"/><br/>
