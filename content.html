@@ -36,7 +36,13 @@
 		    	$(obj).append('<button class="group_delete">X</button>');
 			});
 
-			$('.group_delete').click(function() {
+			$('body').on('click', '.group_delete', function(){
+				/*var buttonClass = $(this).attr('class');
+				if(buttonClass == 'group_delete'){
+		        	var groupHeader = $('.group_header');
+		        	groupHeader.append('equal');
+				}*/
+
 			    var groupDiv = $(this).parent();
 			    var groupId = groupDiv.attr("id"); /*$(this).attr("id");*/
 			    var groupData = {"submit" : "Delete",
