@@ -10,6 +10,8 @@
 		<script>
 		$(document).ready(function(){
 			$('.group_form').bind('submit', function(e) {
+				$('.message').remove();
+				
 		        e.preventDefault();
 				var data = $(this).serialize();
 				data += "&submit=%2B%20New%20Group";
