@@ -31,7 +31,7 @@ def groupsHTMLForUsername(username):
 		result_group_timestring = datetime.datetime.fromtimestamp(result_group_timeconverted).strftime('%m/%d/%Y')
 
 		# result_group_timestring = result_group_timeconverted.strftime("%d/%m/%y")
-		result_string += '<div class="group" id="' + result_group_id + '" style="color:' + result_group_color + '"><div class="group_number">' + str(group_i) + '</div>' + result_group_name + '<p class="group_subtitle"> Created ' + result_group_timestring + '</p></div>'
+		result_string += '<div class="group" id="' + result_group_id + '" style="color:' + result_group_color + '">' + result_group_name + '<p class="group_subtitle"> Created ' + result_group_timestring + '</p></div>'
 
 	if group_i == 0:
 		result_string += '<div class="message">No groups yet :)</div>'
@@ -143,13 +143,26 @@ elif submit_value == '+ New Group':
 			c.execute('CREATE TABLE IF NOT EXISTS groups(id INTEGER primary key, username varchar(250), group_name varchar(250), group_color varchar(250), timestamp datetime)')
 			c.execute('INSERT INTO groups (username, group_name, group_color, timestamp) VALUES (?, ?, ?, ?)', (username, group_name, group_color, current_time))
 			conn.commit()
+
+			# result_string = groupsHTMLForUsername(username)
+			# original_page = urllib.urlopen('http://nimsyllabus.com/content.html')
+			# original_page_text = original_page.read()
+			# augmented_text = original_page_text.replace('</body>', result_string + '</body>')
+ 			c.execute('SELECT * FROM groups WHERE username=? ORDER BY id DESC LIMIT 1', (username,))
+ 			group = c.fetchone()
 			conn.close()
 
-			result_string = groupsHTMLForUsername(username)
-			original_page = urllib.urlopen('http://nimsyllabus.com/content.html')
-			original_page_text = original_page.read()
-			augmented_text = original_page_text.replace('</body>', result_string + '</body>')
-			print 'Content-Type: text/html\n\n' + augmented_text
+			result_group_id = str(group[0])
+			result_group_name = group[2]
+			result_group_color = str(group[3])
+			result_group_timestamp = str(group[4])
+			result_group_timeconverted = time.mktime(time.strptime(result_group_timestamp, '%Y-%m-%d %H:%M:%S.%f')) # time.mktime(time.strptime(result_group_timestamp, '%Y-%m-%d %H:%M:%S').timetuple())
+			result_group_timestring = datetime.datetime.fromtimestamp(result_group_timeconverted).strftime('%m/%d/%Y')
+
+			# result_group_timestring = result_group_timeconverted.strftime("%d/%m/%y")
+			result_string = '<div class="group" id="' + result_group_id + '" style="color:' + result_group_color + '">' + result_group_name + '<p class="group_subtitle"> Created ' + result_group_timestring + '</p></div>'
+
+			print 'Content-Type: text/html\n\n' + result_string
 elif not 'username_field' in user_form or not 'password_field' in user_form:
 	original_page = urllib.urlopen('http://nimsyllabus.com/index.html')
 	original_page_text = original_page.read()

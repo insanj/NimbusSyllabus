@@ -9,15 +9,25 @@
 		<script src="http://nimsyllabus.com/jquery-3.1.1.min.js"></script>
 		<script>
 		$(document).ready(function(){
-			$('.group_form').bind('submit', function() {
-				var data = $(this).serializeArray();
+			$('.group_form').bind('submit', function(e) {
+		        e.preventDefault();
+				var data = $(this).serialize();
+				data += "&submit=%2B%20New%20Group";
 
 		        $.ajax({
 		        	url: "http://nimsyllabus.com/cgi-bin/nimbus-accounts.py", 
 		        	type: "GET",
 		        	data: data,
 		        	success: function(result){
-		        		$('html').html(result);
+		        		/*$('html').html(result);*/
+
+			        	var groupHeader = $('.group_header');
+		        		groupHeader.animate({height: 0, "margin" : 0}, function() {
+				        	groupHeader.remove();
+			        	});
+
+		        		var resultDiv = $(result).insertAfter('.footer');
+		        		$(resultDiv).append('<button class="group_delete">X</button>');
 		       		}
 		        });
 		    });
@@ -112,12 +122,12 @@
 		<div class="footer">
 			<div class="logout"><a style="color: #57a4ed;" href="http://nimsyllabus.com/cgi-bin/nimbus-accounts.py?submit=Logout">Log out</a></div>
 
-			<form class="group_form">
+			<form class="group_form" action="">
 				<input type="name" placeholder="new group name" name="group_name"/>
 				<input type="color" placeholder="color" name="group_color"/><br/>
 				<input type="submit" name="submit" value="+ New Group"/><br/>
 			</form>
-		</div>
+		</div>		
 
 	</body>
 </html>
