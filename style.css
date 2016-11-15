@@ -8,6 +8,16 @@ body {
     text-align: center;
 }
 
+::-moz-selection {
+  color: white;
+  background: #ff6fcf;;
+}
+
+::selection {
+  color: white;
+  background: #ff6fcf;;
+} 
+
 img {
     width: 90px;
     height: 90px;
@@ -51,6 +61,8 @@ a:hover {
 }
 
 .header {
+    white-space: nowrap;
+
     background-color: #ffffff;
     text-align: left;
 
@@ -59,12 +71,21 @@ a:hover {
     border-width: 1px;
 
     width: 100%;
+
     margin: -10px 0px 20px -10px;
     padding: 20px 20px 20px 0px; /* top right bottom left */
     opacity: 0.97;
     position: fixed;
     
     z-index: 4;
+}
+
+.username {
+    font-family: -apple-system, BlinkMacSystemFont, "HelveticaNeue", HelveticaNeue, Arial, sans-serif;
+    font-size: 16px;
+    color: #cccccc;
+    text-align: right;
+    margin: 0px;
 }
 
 .logout {
@@ -101,7 +122,7 @@ a {
     text-decoration: none;
 }
 
-input, select {
+.footer input, select {
     padding: 8px 10px;
     margin: 3px 0px;
 
@@ -110,7 +131,7 @@ input, select {
     box-sizing: border-box;
 }
 
-input[type=submit] {
+.footer input[type=submit] {
     background-color: #6E89E0;
     color: white;
 
@@ -125,7 +146,7 @@ input[type=submit] {
     font-size: 16px;
 }
 
-input[type=submit]:hover {
+.footer input[type=submit]:hover {
     background-color: #9DADE0;
 }
 
@@ -180,14 +201,16 @@ input[type=submit]:hover {
     z-index: 2;
 }
 
+.group_buttons {
+    margin: -43px 15px 0px 0px;
+    float: right;
+}
+
 .group_delete {
     font-family: "Verdana", Verdana, sans-serif;
     font-size: 15px;
-
-    margin: -43px 15px 0px 0px;
-    float: right;
-
     color: #6f8bdd;
+
     width: 35px;
     height: 35px;
     
@@ -195,6 +218,28 @@ input[type=submit]:hover {
     background-color: #fdf5ff;
     border: none;
     cursor: pointer;
+}
+
+.group_edit {
+    font-family: "Verdana", Verdana, sans-serif;
+    font-size: 15px;
+    color: #6f8bdd;
+
+    width: 35px;
+    height: 35px;
+    
+    border-radius: 4px;
+    background-color: #fdf5ff;
+    border: none;
+    cursor: pointer;
+
+    margin-right: 10px;
+}
+
+.group_content {
+    font-family: -apple-system, BlinkMacSystemFont, "HelveticaNeue-Light", HelveticaNeue-Light, Arial, sans-serif;
+    font-size: 15px;
+    color: #cccccc;
 }
 
 button:hover {

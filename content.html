@@ -11,7 +11,7 @@
 		$(document).ready(function(){
 			$('.group_form').bind('submit', function(e) {
 				$('.message').remove();
-				
+
 		        e.preventDefault();
 				var data = $(this).serialize();
 				data += "&submit=%2B%20New%20Group";
@@ -29,13 +29,13 @@
 			        	});
 
 		        		var resultDiv = $(result).insertAfter('.footer');
-		        		$(resultDiv).append('<button class="group_delete">X</button>');
+		        		$(resultDiv).append('<div class="group_buttons"><button class="group_edit">E</button><button class="group_delete">X</button></div><div class="group_content">No files yet :)</div>');
 		       		}
 		        });
 		    });
 
 		    $('.group').each(function(i, obj) {
-		    	$(obj).append('<button class="group_delete">X</button>');
+		    	$(obj).append('<div class="group_buttons"><button class="group_edit">E</button><button class="group_delete">X</button></div><div class="group_content">No files yet :)</div>');
 			});
 
 			$('body').on('click', '.group_delete', function(){
@@ -45,7 +45,7 @@
 		        	groupHeader.append('equal');
 				}*/
 
-			    var groupDiv = $(this).parent();
+			    var groupDiv = $(this).parent().parent(); /* first parent is button tray (group_buttons) */
 			    var groupId = groupDiv.attr("id"); /*$(this).attr("id");*/
 			    var groupData = {"submit" : "Delete",
 			    				 "id" : groupId};
@@ -68,7 +68,7 @@
 		        		});
 		        	}
 		        	else{
-				    	groupDiv.append('Failed to delete: "' + trimmedResultString + '"');
+				    	groupDiv.append('Failed to delete: "' + trimmedResultString + '" inside of ' + groupDiv);
 		        	}
 	       		});
 	       		/*.fail(function(jqXHR, textStatus, error){
@@ -78,46 +78,6 @@
 
 		});
 		</script>
-
-		<script language="javascript">
-			window.onload = loginIfPossible()
-
-            function lookCookie(name){
-                var cookiepart = name + "=";
-         	    var ca = document.cookie.split(';');
-        	    for (var i = 0; i < ca.length; i++) {
-                	var c = ca[i];
-					while (c.charAt(0) == ' ') {
-                   		c = c.substring(1);
-                	}
-                	
-                	if (c.indexOf(cookiepart) == 0) {
-                		//if the cookie is found return cookie
-                    	return c.substring(cookiepart.length, c.length);
-                	}
-                	
-                	return "";
-                }
-			}
-
-			function loginIfPossible() {
-	           	var username = lookCookie('account_cookie');
-
-	            if (!username || username.length == 0) {
-	                document.location.href = 'http://nimsyllabus.com/index.html';
-	            }
-
-	            else {
-	            	var lazy_load_url = 'http://nimsyllabus.com/cgi-bin/nimbus-accounts.py?submit=Cookie+Login&username=' + username;
-
-	            	if (document.location.href != lazy_load_url) {
-		                document.location.href = 'http://nimsyllabus.com/cgi-bin/nimbus-accounts.py?submit=Cookie+Login&username=' + username;
-	            	}
-	            }
-			}
-           	
-        </script>
-
 	</head>
 
 	<body>
@@ -137,5 +97,49 @@
 			</form>
 		</div>		
 
+		<script language="javascript">
+			(function() {
+				loginIfPossible();
+
+	            function lookCookie(name){
+	                var cookiepart = name + "=";
+	         	    var ca = document.cookie.split(';');
+	        	    for (var i = 0; i < ca.length; i++) {
+	                	var c = ca[i];
+						while (c.charAt(0) == ' ') {
+	                   		c = c.substring(1);
+	                	}
+	                	
+	                	if (c.indexOf(cookiepart) == 0) {
+	                		//if the cookie is found return cookie
+	                    	return c.substring(cookiepart.length, c.length);
+	                	}
+	                	
+	                	return "";
+	                }
+				}
+
+				function loginIfPossible() {
+		           	var username = lookCookie('account_cookie');
+
+		            if (!username || username.length == 0) {
+		                document.location.href = 'http://nimsyllabus.com/index.html';
+		            }
+
+		            else {
+		            	var lazy_load_url = 'http://nimsyllabus.com/cgi-bin/nimbus-accounts.py?submit=Cookie+Login&username=' + username;
+
+		            	if (document.location.href != lazy_load_url) {
+			                document.location.href = 'http://nimsyllabus.com/cgi-bin/nimbus-accounts.py?submit=Cookie+Login&username=' + username;
+		            	}
+
+		            	else {
+		            		var logoutDiv = document.getElementsByClassName('logout');
+							logoutDiv[0].innerHTML = '<div class="username">' + username + "</div>" + logoutDiv[0].innerHTML;
+		            	}
+		            }
+				}
+           	})();
+        </script>
 	</body>
 </html>
