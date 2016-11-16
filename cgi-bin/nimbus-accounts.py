@@ -101,7 +101,7 @@ elif submit_value == 'Cookie Login':
 	username = user_form['username'].value
 	current_time = datetime.datetime.now()
 
-	c.execute('CREATE TABLE IF NOT EXISTS groups(id INTEGER primary key, username varchar(250), group_name varchar(250), group_color varchar(250), timestamp datetime)')
+	c.execute('CREATE TABLE IF NOT EXISTS groups(id INTEGER primary key, username varchar(250), group_name varchar(250), group_color varchar(250), timestamp datetime, lastedit datetime)')
 	conn.commit()
 	conn.close()
 
@@ -140,8 +140,8 @@ elif submit_value == '+ New Group':
 
 			current_time = datetime.datetime.now()
 
-			c.execute('CREATE TABLE IF NOT EXISTS groups(id INTEGER primary key, username varchar(250), group_name varchar(250), group_color varchar(250), timestamp datetime)')
-			c.execute('INSERT INTO groups (username, group_name, group_color, timestamp) VALUES (?, ?, ?, ?)', (username, group_name, group_color, current_time))
+			c.execute('CREATE TABLE IF NOT EXISTS groups(id INTEGER primary key, username varchar(250), group_name varchar(250), group_color varchar(250), timestamp datetime, lastedit datetime)')
+			c.execute('INSERT INTO groups (username, group_name, group_color, timestamp, lastedit) VALUES (?, ?, ?, ?)', (username, group_name, group_color, current_time, current_time))
 			conn.commit()
 
 			# result_string = groupsHTMLForUsername(username)
