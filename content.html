@@ -7,6 +7,14 @@
 		<link rel="icon" type="image/png" href="http://nimsyllabus.com/favicon.png">
 
 		<script src="http://nimsyllabus.com/jquery-3.1.1.min.js"></script>
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		
+		<script>		
+		function myFunction() {
+		    alert("live fast die young");
+		}
+		</script>
+		
 		<script>
 		$(document).ready(function(){
 			$('.group_form').bind('submit', function(e) {
@@ -23,21 +31,21 @@
 		        	success: function(result){
 		        		/*$('html').html(result);*/
 
-			        	var groupHeader = $('.group_header');
-		        		groupHeader.animate({height: 0, "margin" : 0}, function() {
-				        	groupHeader.remove();
-			        	});
+						var groupHeader = $('.group_header');
+						groupHeader.animate({height: 0, "margin" : 0}, function() {
+							groupHeader.remove();
+						});
 
 		        		var resultDiv = $(result).insertAfter('.footer');
-		        		$(resultDiv).append('<div class="group_buttons"><button class="group_edit">E</button><button class="group_delete">X</button></div><div class="group_content">No files yet :)</div>');
+		        		$(resultDiv).append('<div class="group_buttons"><button class="group_edit" onclick="myFunction()">E</button><button class="group_delete">X</button></div><div class="group_content">No files yet :)</div>');
 		       		}
 		        });
 		    });
 
 		    $('.group').each(function(i, obj) {
-		    	$(obj).append('<div class="group_buttons"><button class="group_edit">E</button><button class="group_delete">X</button></div><div class="group_content">No files yet :)</div>');
+		    	$(obj).append('<div class="group_buttons"><button class="group_edit" onclick="myFunction()">E</button><button class="group_delete">X</button></div><div class="group_content">No files yet :)</div>');
 			});
-
+			
 			$('body').on('click', '.group_delete', function(){
 				/*var buttonClass = $(this).attr('class');
 				if(buttonClass == 'group_delete'){
@@ -57,9 +65,8 @@
 		        }).always(function(data, textStatus, jqXHR){
 		        	var trimmedResultString = $.trim(data);
 		        	if(trimmedResultString == 'Success'){
-			        	var groupHeader = $('.group_header');
-
-			        	groupHeader.animate({height: 0, "margin" : 0}, function() {
+		        		var groupHeader = $('.group_header');
+		        		groupHeader.animate({height: 0, "margin" : 0}, function() {
 				        	groupHeader.remove();
 			        	});
 
@@ -70,33 +77,30 @@
 		        	else{
 				    	groupDiv.append('Failed to delete: "' + trimmedResultString + '" inside of ' + groupDiv);
 		        	}
-	       		});
-	       		/*.fail(function(jqXHR, textStatus, error){
-			    	groupDiv.append('Failed to delete' + error)
-		        });*/
+	       		});			
 			});
-
 		});
+		
 		</script>
 	</head>
 
 	<body>
-
 		<div class="header">
 			<a href="http://nimsyllabus.com"><img src="http://nimsyllabus.com/favicon.png" />
-			<h1>Nimbus Syllabus</h1></a>
+			<h1>Nimbus Syllabus</h1></a>			
 		</div>
 
 		<div class="footer">
 			<div class="logout"><a style="color: #57a4ed;" href="http://nimsyllabus.com/cgi-bin/nimbus-accounts.py?submit=Logout">Log out</a></div>
 
+			
 			<form class="group_form" action="">
 				<input type="name" placeholder="new group name" name="group_name"/>
 				<input type="color" placeholder="color" name="group_color"/><br/>
 				<input type="submit" name="submit" value="+ New Group"/><br/>
 			</form>
-		</div>		
-
+		</div>				
+		
 		<script language="javascript">
 			(function() {
 				loginIfPossible();
