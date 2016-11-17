@@ -9,9 +9,10 @@
 		<script src="http://nimsyllabus.com/jquery-3.1.1.min.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 		
+		
 		<script>		
 		function myFunction() {
-		    alert("live fast die young");
+			document.getElementById('group_form').style.display = "block";		
 		}
 		</script>
 		
@@ -37,13 +38,13 @@
 						});
 
 		        		var resultDiv = $(result).insertAfter('.footer');
-		        		$(resultDiv).append('<div class="group_buttons"><button class="group_edit" onclick="myFunction()">E</button><button class="group_delete">X</button></div><div class="group_content">No files yet :)</div>');
+		        		$(resultDiv).append('<div class="group_buttons"><button class="group_edit">E</button><button class="group_delete">X</button></div><div class="group_content">No files yet :)</div>');
 		       		}
 		        });
 		    });
 
 		    $('.group').each(function(i, obj) {
-		    	$(obj).append('<div class="group_buttons"><button class="group_edit" onclick="myFunction()">E</button><button class="group_delete">X</button></div><div class="group_content">No files yet :)</div>');
+		    	$(obj).append('<div class="group_buttons"><button class="group_hide">HIDE</button><button class="group_edit">E</button><button class="group_delete">X</button></div><div class="group_content">No files yet :)</div>');
 			});
 			
 			$('body').on('click', '.group_delete', function(){
@@ -79,12 +80,33 @@
 		        	}
 	       		});			
 			});
+
+			$('body').on('click', '.group_hide', function(){
+				var groupHideButton = $(this);
+			    var groupDiv = groupHideButton.parent().parent(); /* first parent is button tray (group_buttons) */
+			    var groupContentDiv = groupDiv.find('.group_content');
+
+  				groupContentDiv.slideUp("slow", function() {
+    				groupHideButton.replaceWith('<button class="group_show" style="margin-right: 10px;">SHOW</button>');
+		        });
+			});
+
+			$('body').on('click', '.group_show', function(){
+				var groupShowButton = $(this);
+			    var groupDiv = groupShowButton.parent().parent();
+			    var groupContentDiv = groupDiv.find('.group_content');
+
+  				groupContentDiv.slideDown("slow", function() {
+    				groupShowButton.replaceWith('<button class="group_hide">HIDE</button>');
+		        });
+			});
 		});
 		
 		</script>
 	</head>
 
 	<body>
+		
 		<div class="header">
 			<a href="http://nimsyllabus.com"><img src="http://nimsyllabus.com/favicon.png" />
 			<h1>Nimbus Syllabus</h1></a>			

@@ -206,33 +206,30 @@ a {
     float: right;
 }
 
-.group_delete {
+.group_buttons button {
     font-family: "Verdana", Verdana, sans-serif;
     font-size: 15px;
     color: #6f8bdd;
 
-    width: 35px;
     height: 35px;
-    
+
     border-radius: 4px;
     background-color: #fdf5ff;
     border: none;
     cursor: pointer;
+
+    min-width: 35px;
+}
+
+.group_delete {
+
 }
 
 .group_edit {
-    font-family: "Verdana", Verdana, sans-serif;
-    font-size: 15px;
-    color: #6f8bdd;
+    margin-right: 10px;
+}
 
-    width: 35px;
-    height: 35px;
-    
-    border-radius: 4px;
-    background-color: #fdf5ff;
-    border: none;
-    cursor: pointer;
-
+.group_hide {
     margin-right: 10px;
 }
 
