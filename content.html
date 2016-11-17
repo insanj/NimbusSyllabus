@@ -8,14 +8,7 @@
 
 		<script src="http://nimsyllabus.com/jquery-3.1.1.min.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-		
-		
-		<script>		
-		function myFunction() {
-			document.getElementById('group_form').style.display = "block";		
-		}
-		</script>
-		
+		        
 		<script>
 		$(document).ready(function(){
 			$('.group_form').bind('submit', function(e) {
@@ -38,13 +31,13 @@
 						});
 
 		        		var resultDiv = $(result).insertAfter('.footer');
-		        		$(resultDiv).append('<div class="group_buttons"><button class="group_edit">E</button><button class="group_delete">X</button></div><div class="group_content">No files yet :)</div>');
+		        		$(resultDiv).append('<div class="group_buttons"><button class="group_hide">hide</button><button class="group_edit">edit</button><button class="group_delete">x</button></div><div class="group_content">No files yet :)</div>');
 		       		}
 		        });
 		    });
 
 		    $('.group').each(function(i, obj) {
-		    	$(obj).append('<div class="group_buttons"><button class="group_hide">HIDE</button><button class="group_edit">E</button><button class="group_delete">X</button></div><div class="group_content">No files yet :)</div>');
+		    	$(obj).append('<div class="group_buttons"><button class="group_hide">hide</button><button class="group_edit">edit</button><button class="group_delete">x</button></div><div class="group_content">No files yet :)</div>');
 			});
 			
 			$('body').on('click', '.group_delete', function(){
@@ -87,7 +80,7 @@
 			    var groupContentDiv = groupDiv.find('.group_content');
 
   				groupContentDiv.slideUp("slow", function() {
-    				groupHideButton.replaceWith('<button class="group_show" style="margin-right: 10px;">SHOW</button>');
+    				groupHideButton.replaceWith('<button class="group_show" style="margin-right: 10px;">show</button>');
 		        });
 			});
 
@@ -97,12 +90,60 @@
 			    var groupContentDiv = groupDiv.find('.group_content');
 
   				groupContentDiv.slideDown("slow", function() {
-    				groupShowButton.replaceWith('<button class="group_hide">HIDE</button>');
+    				groupShowButton.replaceWith('<button class="group_hide">hide</button>');
 		        });
 			});
 		});
 		
 		</script>
+        
+        
+        <script>
+         $(function () {
+            $("#dialog").dialog({
+                    modal: true,
+                    autoOpen: false,
+                    title: "",
+                    width: 500,
+                    height: 150
+            });
+
+			$('body').on('click', '.group_edit', function(){
+                $('#dialog').dialog('open');
+            });
+
+			$('body').on('click', '.editor', function(e) {
+        		console.log("bound!");
+
+				e.preventDefault();
+				var data = $(this).serialize();
+				// data += "&submit=%2B%20New%20Group";
+
+		        $.ajax({
+		        	url: "http://nimsyllabus.com/cgi-bin/nimbus-accounts.py", 
+		        	type: "GET",
+		        	data: data,
+		        	success: function(result){
+		        		/*$('html').html(result);*/
+		        		console.log("succeed");
+		                $('#dialog').dialog('close');
+		       		},
+		       		error: function(result){
+		        		console.log("fail");
+		                $('#dialog').dialog('close');
+		       		}
+		        });
+			});
+		});
+        </script>
+        
+        <div id="dialog">
+            <form id="edit" action="">
+				<input type="name" placeholder="edit group name" name="group_name_e"/>
+				<input type="color" placeholder="color" name="group_color_e"/><br/>
+			</form>
+            <button class="editor" form="edit"/>Edit</button><br/>
+        </div>
 	</head>
 
 	<body>
