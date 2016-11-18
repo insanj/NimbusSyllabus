@@ -20,7 +20,7 @@ def groupsHTMLForUsername(username):
 	c.execute('SELECT * FROM groups WHERE username=? ORDER BY id DESC', (username,))
 
 	group_i = 0
-	result_string = ''
+	result_string = '<div class="group_container">'
 	for group in c:
 		group_i = group_i + 1
 		result_group_id = str(group[0])
@@ -39,8 +39,10 @@ def groupsHTMLForUsername(username):
 		group_plural_suffix = 's'
 		if group_i == 1:
 			group_plural_suffix = ''
-		result_string = '<div class="group_header">' + str(group_i) + ' Group' + group_plural_suffix + '</div>' + result_string
+		#result_string = '<div class="group_header">' + str(group_i) + ' Group' + group_plural_suffix + '</div>' + result_string
 		
+	result_string += '</div>'
+
 	conn.commit()
 	conn.close()
 
@@ -54,7 +56,43 @@ user_form = cgi.FieldStorage()
 
 submit_value = user_form['submit'].value 
 
-if submit_value == 'Delete':
+if submit_value == 'EditGroup':
+	cookie = Cookie.SimpleCookie(stored_cookie_string)
+	if not 'account_cookie' in cookie:	
+		original_page = urllib.urlopen('http://nimsyllabus.com/index.html')
+		original_page_text = original_page.read()
+		augmented_text = original_page_text.replace('</body>', '<div class="message">Cannot find username for current account, please log in again.</div>' + '</body>')
+		print 'Content-Type: text/html\n\n' + 'No username found'
+	else:
+		username = cookie['account_cookie'].value
+		groupId = user_form['group_id'].value
+		editGroupName = ''
+		if 'edit_group_name' in user_form:
+			editGroupName = user_form['edit_group_name'].value
+
+		editGroupColor = ''
+		if 'edit_group_color' in user_form:
+			editGroupColor = user_form['edit_group_color'].value
+
+		current_time = datetime.datetime.now()
+
+		conn = sqlite3.connect('nimbus.db') # automatically creates file if doesn't exist
+		c = conn.cursor()
+		
+		if editGroupName == '' and editGroupColor == '':
+			c.execute('UPDATE groups SET lastedit=? WHERE username=? AND id=?', (current_time, username, groupId))
+		elif editGroupColor == '':
+			c.execute('UPDATE groups SET lastedit=?,group_name=? WHERE username=? AND id=?', (current_time, editGroupName, username, groupId))
+		else:
+			c.execute('UPDATE groups SET lastedit=?,group_name=?,group_color=? WHERE username=? AND id=?', (current_time, editGroupName, editGroupColor, username, groupId))
+
+		conn.commit()
+		conn.close()
+
+		#result_string = '<div class="message">Deleted group successfully.</div>'
+		result_string = groupsHTMLForUsername(username)
+		print 'Content-Type: text/html\n\n' + result_string
+elif submit_value == 'Delete':
 	cookie = Cookie.SimpleCookie(stored_cookie_string)
 	if not 'account_cookie' in cookie:	
 		original_page = urllib.urlopen('http://nimsyllabus.com/index.html')
