@@ -17,7 +17,7 @@ from random import randint
 def groupsHTMLForUsername(username):
 	conn = sqlite3.connect('nimbus.db') # automatically creates file if doesn't exist
 	c = conn.cursor()
-	c.execute('SELECT * FROM groups WHERE username=? ORDER BY id DESC', (username,))
+	c.execute('SELECT * FROM groups WHERE username=? ORDER BY lastedit DESC', (username,))
 
 	group_i = 0
 	result_string = '<div class="group_container">'

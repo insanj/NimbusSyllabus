@@ -22,7 +22,7 @@
 		        	url: "http://nimsyllabus.com/cgi-bin/nimbus-accounts.py", 
 		        	type: "GET",
 		        	data: data,
-		        	success: function(result){
+		        	success: function(data, textStatus, jqXHR){
 		        		/*$('html').html(result);*/
 
 						/*var groupHeader = $('.group_header');
@@ -30,8 +30,12 @@
 							groupHeader.remove();
 						});*/
 
-		        		var resultDiv = $(result).insertAfter('.footer');
-		        		$(resultDiv).append('<div class="group_buttons"><button class="group_hide">hide</button><button class="group_edit">edit</button><button class="group_delete">x</button></div><div class="group_content">No files yet :)</div>');
+
+						var groupButtonsString = '<div class="group_buttons"><button class="group_hide">hide</button><button class="group_edit">edit</button><button class="group_delete">x</button></div><div class="group_content">No files yet :)</div>';
+						var groupEndDivIndex = data.length - 7;
+						var splicedData = data.substr(0, groupEndDivIndex) + groupButtonsString;
+
+		        		var resultDiv = $('.group_container').prepend(splicedData);
 		       		}
 		        });
 		    });
