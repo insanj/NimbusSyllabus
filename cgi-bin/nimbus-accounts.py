@@ -26,12 +26,12 @@ def groupsHTMLForUsername(username):
 		result_group_id = str(group[0])
 		result_group_name = group[2]
 		result_group_color = str(group[3])
-		result_group_timestamp = str(group[4])
+		result_group_timestamp = str(group[5])
 		result_group_timeconverted = time.mktime(time.strptime(result_group_timestamp, '%Y-%m-%d %H:%M:%S.%f')) # time.mktime(time.strptime(result_group_timestamp, '%Y-%m-%d %H:%M:%S').timetuple())
 		result_group_timestring = datetime.datetime.fromtimestamp(result_group_timeconverted).strftime('%m/%d/%Y')
 
 		# result_group_timestring = result_group_timeconverted.strftime("%d/%m/%y")
-		result_string += '<div class="group" id="' + result_group_id + '" style="color:' + result_group_color + '">' + result_group_name + '<p class="group_subtitle"> Created ' + result_group_timestring + '</p></div>'
+		result_string += '<div class="group" id="' + result_group_id + '" style="color:' + result_group_color + '">' + result_group_name + '<p class="group_subtitle"> Updated ' + result_group_timestring + '</p></div>'
 
 	if group_i == 0:
 		result_string += '<div class="message">No groups yet :)</div>'
@@ -81,8 +81,10 @@ if submit_value == 'EditGroup':
 		
 		if editGroupName == '' and editGroupColor == '':
 			c.execute('UPDATE groups SET lastedit=? WHERE username=? AND id=?', (current_time, username, groupId))
-		elif editGroupColor == '':
+		elif editGroupColor == '' and editGroupName != '':
 			c.execute('UPDATE groups SET lastedit=?,group_name=? WHERE username=? AND id=?', (current_time, editGroupName, username, groupId))
+		elif editGroupColor != '' and editGroupName == '':
+			c.execute('UPDATE groups SET lastedit=?,group_color=? WHERE username=? AND id=?', (current_time, editGroupColor, username, groupId))
 		else:
 			c.execute('UPDATE groups SET lastedit=?,group_name=?,group_color=? WHERE username=? AND id=?', (current_time, editGroupName, editGroupColor, username, groupId))
 
@@ -193,12 +195,12 @@ elif submit_value == '+ New Group':
 			result_group_id = str(group[0])
 			result_group_name = group[2]
 			result_group_color = str(group[3])
-			result_group_timestamp = str(group[4])
+			result_group_timestamp = str(group[5])
 			result_group_timeconverted = time.mktime(time.strptime(result_group_timestamp, '%Y-%m-%d %H:%M:%S.%f')) # time.mktime(time.strptime(result_group_timestamp, '%Y-%m-%d %H:%M:%S').timetuple())
 			result_group_timestring = datetime.datetime.fromtimestamp(result_group_timeconverted).strftime('%m/%d/%Y')
 
 			# result_group_timestring = result_group_timeconverted.strftime("%d/%m/%y")
-			result_string = '<div class="group" id="' + result_group_id + '" style="color:' + result_group_color + '">' + result_group_name + '<p class="group_subtitle"> Created ' + result_group_timestring + '</p></div>'
+			result_string = '<div class="group" id="' + result_group_id + '" style="color:' + result_group_color + '">' + result_group_name + '<p class="group_subtitle"> Updated ' + result_group_timestring + '</p></div>'
 
 			print 'Content-Type: text/html\n\n' + result_string
 elif not 'username_field' in user_form or not 'password_field' in user_form:
