@@ -10,6 +10,8 @@
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 		        
 		<script>
+		var groupButtonsString = '<div class="group_buttons"><button class="group_hide">hide</button><button class="group_edit">edit</button><button class="group_delete">x</button></div><div class="group_content"><div class="group_upload_file">Add Coursework<input id="fileupload" type="file" name="files[]" data-url="server/php/"></div>';
+
 		$(document).ready(function(){
 			$('.group_form').bind('submit', function(e) {
 				$('.message').remove();
@@ -31,7 +33,6 @@
 						});*/
 
 
-						var groupButtonsString = '<div class="group_buttons"><button class="group_hide">hide</button><button class="group_edit">edit</button><button class="group_delete">x</button></div><div class="group_content">No files yet :)</div>';
 						var groupEndDivIndex = data.length - 7;
 						var splicedData = data.substr(0, groupEndDivIndex) + groupButtonsString;
 
@@ -41,7 +42,7 @@
 		    });
 
 		    $('.group').each(function(i, obj) {
-		    	$(obj).append('<div class="group_buttons"><button class="group_hide">hide</button><button class="group_edit">edit</button><button class="group_delete">x</button></div><div class="group_content">No files yet :)</div>');
+		    	$(obj).append(groupButtonsString);
 			});
 			
 			$('body').on('click', '.group_delete', function(){
@@ -140,7 +141,7 @@
 		                $(".group_container").replaceWith(data);
 
 		                $('.group').each(function(i, obj) {
-		    				$(obj).append('<div class="group_buttons"><button class="group_hide">hide</button><button class="group_edit">edit</button><button class="group_delete">x</button></div><div class="group_content">No files yet :)</div>');
+		    				$(obj).append(groupButtonsString);
 						});
 
 		        		$(".edit_name_field").val("");
@@ -164,7 +165,7 @@
         <div id="dialog">
             <form id="edit" action="">
 				<input class="edit_name_field" type="name" placeholder="edit group name" name="group_name_e"/>
-				<input class="edit_name_color" type="color" placeholder="color" name="group_color_e"/><br/>
+				<input class="edit_name_color" type="not-fancy-color" placeholder="color" name="group_color_e"/><br/>
 			</form>
             <button class="editor" form="edit"/>Edit</button><br/>
         </div>

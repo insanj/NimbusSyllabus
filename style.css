@@ -238,6 +238,30 @@ a {
     font-family: -apple-system, BlinkMacSystemFont, "HelveticaNeue-Light", HelveticaNeue-Light, Arial, sans-serif;
     font-size: 15px;
     color: #cccccc;
+    display: inline-block;
+}
+
+.group_upload_file {
+    background-color: #6E89E0;
+    display: inline-block;
+    float: left;
+    border-radius: 7px;
+    margin: 10px 10px 10px 0px; 
+
+    height: auto;
+    width: auto;
+
+    color: white;
+    cursor: pointer;
+
+    padding: 20px;
+    font-weight: 600;
+    text-align: left;
+}
+
+.group_upload_file input {
+    display: block;
+    margin-top: 10px;
 }
 
 button:hover {
@@ -271,6 +295,7 @@ button:hover {
 
     font-variant: small-caps;    
     padding: 0px;
+    margin-right: 100px;
 }
 
 .editor {
@@ -288,8 +313,8 @@ button:hover {
     font-variant: small-caps;    
     padding: 0px;
 
-    margin-top: 20px;
-    margin-left: 0px;
+    margin-top: 25px;
+    margin-left: 100px;
 }
 
 #dialog {
@@ -317,4 +342,3 @@ button:hover {
 .ui-dialog-title {
     display: none;
 }
-
