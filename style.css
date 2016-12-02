@@ -246,22 +246,27 @@ a {
     display: inline-block;
     float: left;
     border-radius: 7px;
-    margin: 10px 10px 10px 0px; 
+    margin: 15px 15px 15px 0px;
+    text-align: left;
 
     height: auto;
     width: auto;
 
     color: white;
-    cursor: pointer;
 
     padding: 20px;
     font-weight: 600;
-    text-align: left;
 }
 
 .group_upload_file input {
+    margin: 10px 10px 10px 0px;
     display: block;
-    margin-top: 10px;
+}
+
+.group_upload_file #name {
+    border-radius: 2px;
+    border: none;
+    padding: 8px;
 }
 
 button:hover {
@@ -342,3 +347,4 @@ button:hover {
 .ui-dialog-title {
     display: none;
 }
+

@@ -10,7 +10,7 @@
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 		        
 		<script>
-		var groupButtonsString = '<div class="group_buttons"><button class="group_hide">hide</button><button class="group_edit">edit</button><button class="group_delete">x</button></div><div class="group_content"><div class="group_upload_file">Add Coursework<input id="fileupload" type="file" name="files[]" data-url="server/php/"></div>';
+		var groupButtonsString = '<div class="group_buttons"><button class="group_hide">hide</button><button class="group_edit">edit</button><button class="group_delete">x</button></div><div class="group_content"><div class="group_upload_file">Add Coursework<form action="#" enctype="multipart/form-data" method="post"><input type="text" name="name" placeholder="Name" id="name"><input type="file" name="file_upload" id="file_upload"><input class="upload_file_submit" type="submit" name="submit" value="Upload"></form></div>';
 
 		$(document).ready(function(){
 			$('.group_form').bind('submit', function(e) {
@@ -98,6 +98,21 @@
     				groupShowButton.replaceWith('<button class="group_hide">hide</button>');
 		        });
 			});
+
+			$('body').on('click', '.upload_file_submit', function(e) {
+		        e.preventDefault();
+
+		        var parentForm = $(this).parent(); 
+		        var parentFormData = parentForm.serialize();
+		        var parentFormForm = parentForm[0];
+		        var parentFormFormInput = parentFormForm[1];
+		        var parentFormFile = parentFormFormInput.files[0];
+		        var parentGroupDiv = $(this).parent().parent().parent().parent(); // button, form, upload_file div, content div, * group div *
+
+				parentFormData += '&group_id=' + parentGroupDiv.attr("id");
+				console.log('parentFormData = ' + parentFormData);
+			});
+
 		});
 		</script>
         
