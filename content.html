@@ -107,10 +107,26 @@
 		        var parentFormForm = parentForm[0];
 		        var parentFormFormInput = parentFormForm[1];
 		        var parentFormFile = parentFormFormInput.files[0];
+				
+				var fileData = new FormData();
+				fileData.append('file-0', parentFormFile);
+
 		        var parentGroupDiv = $(this).parent().parent().parent().parent(); // button, form, upload_file div, content div, * group div *
 
 				parentFormData += '&group_id=' + parentGroupDiv.attr("id");
-				console.log('parentFormData = ' + parentFormData);
+				console.log('fileData = ' + fileData);
+
+				$.ajax({
+		        	url: "http://nimsyllabus.com/cgi-bin/nimbus-accounts.py",
+				    data: fileData,
+				    cache: false,
+				    contentType: false,
+				    processData: false,
+				    type: 'POST',
+				    success: function(data){
+				        alert(data);
+				    }
+				});
 			});
 
 		});
