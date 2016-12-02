@@ -8,9 +8,27 @@
 
 		<script src="http://nimsyllabus.com/jquery-3.1.1.min.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-		        
+		      
 		<script>
 		var groupButtonsString = '<div class="group_buttons"><button class="group_hide">hide</button><button class="group_edit">edit</button><button class="group_delete">x</button></div><div class="group_content"><div class="group_upload_file">Add Coursework<form action="#" enctype="multipart/form-data" method="post"><input type="text" name="name" placeholder="Name" id="name"><input type="file" name="file_upload" id="file_upload"><input class="upload_file_submit" type="submit" name="submit" value="Upload"></form></div>';
+
+		function loadFilesForGroupDiv(group_id) {
+			var loadGroupData = "submit=Files&group_id=" + group_id;
+
+			$.ajax({
+	        	url: "http://nimsyllabus.com/cgi-bin/nimbus-accounts.py", 
+	        	type: "GET",
+	        	data: loadGroupData,
+	        	success: function(data, textStatus, jqXHR){
+	        		var trimmedResultString = $.trim(data);
+
+	        		if(trimmedResultString != "Fail") {
+		        		$('.group#' + group_id).find('.file_container').remove();
+		        		$('.group#' + group_id).find('.group_content').append(data);
+	        		}
+	       		}
+	        });
+		}
 
 		$(document).ready(function(){
 			$('.group_form').bind('submit', function(e) {
@@ -43,6 +61,7 @@
 
 		    $('.group').each(function(i, obj) {
 		    	$(obj).append(groupButtonsString);
+		    	loadFilesForGroupDiv($(this).attr('id'));
 			});
 			
 			$('body').on('click', '.group_delete', function(){
@@ -107,10 +126,20 @@
 		        var parentFormForm = parentForm[0];
 		        var parentFormNameInput = parentFormForm[0];
 		        var parentFormName = parentFormNameInput.value;
+		        if(parentFormName.length <= 0) {
+		        	alert("Please give this file a name before uploading! Try again.");
+		        	return;
+		        }
 
 		        var parentFormFileInput = parentFormForm[1];
 		        var parentFormFile = parentFormFileInput.files[0];
-				
+				if(!parentFormFile) {
+		        	alert("Please choose a file to upload before submitting. Thanks!");
+		        	return;
+		        }
+
+		        //<input class="upload_file_submit" type="submit" name="submit" value="Upload">
+
 				var fileData = new FormData();
 				fileData.append('file-0', parentFormFile);
 
@@ -123,6 +152,8 @@
 				fileData.append("input_name", parentFormName);
 				fileData.append("file_name", parentFormFile.name);
 
+		        parentForm.find('.upload_file_submit').replaceWith('<div class="upload_loading">Uploading...</div>');
+
 				$.ajax({
 		        	url: "http://nimsyllabus.com/cgi-bin/nimbus-accounts.py",
 				    data: fileData,
@@ -130,8 +161,11 @@
 				    contentType: false,
 				    processData: false,
 				    type: 'POST',
-				    success: function(data){
-				        alert(data);
+		        	success: function(data, textStatus, jqXHR){
+    					parentFormForm.reset();
+
+    					parentForm.find('.upload_loading').replaceWith('<input class="upload_file_submit" type="submit" name="submit" value="Upload">');
+    					parentGroupDiv.find('.group_content').append(data);
 				    }
 				});
 			});
@@ -180,6 +214,7 @@
 
 		                $('.group').each(function(i, obj) {
 		    				$(obj).append(groupButtonsString);
+		    				loadFilesForGroupDiv($(this).attr('id'));
 						});
 
 		        		$(".edit_name_field").val("");

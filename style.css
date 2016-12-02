@@ -244,7 +244,6 @@ a {
 .group_upload_file {
     background-color: #6E89E0;
     display: inline-block;
-    float: left;
     border-radius: 7px;
     margin: 15px 15px 15px 0px;
     text-align: left;
@@ -348,3 +347,34 @@ button:hover {
     display: none;
 }
 
+/* file */
+
+
+.file_container {
+    display: inline;
+    margin: 0px;
+    padding: 0px;
+}
+
+.file {
+    background-color: #6E89E0;
+    display: inline-block;
+    border-radius: 7px;
+    vertical-align: top;
+    margin: 15px 15px 15px 0px;
+    text-align: left;
+
+    height: 124px;
+    width: 150px;
+
+    color: white;
+
+    padding: 20px;
+    font-weight: 600;
+    pointer: cursor;
+}
+
+.file p {
+    font-weight: 100;
+    font-size: 15px;
+}
