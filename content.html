@@ -103,14 +103,37 @@
 		        e.preventDefault();
 
 		        var parentForm = $(this).parent(); 
-		        var parentFormData = parentForm.serialize();
+		        //var parentFormData = parentForm.serialize();
 		        var parentFormForm = parentForm[0];
-		        var parentFormFormInput = parentFormForm[1];
-		        var parentFormFile = parentFormFormInput.files[0];
-		        var parentGroupDiv = $(this).parent().parent().parent().parent(); // button, form, upload_file div, content div, * group div *
+		        var parentFormNameInput = parentFormForm[0];
+		        var parentFormName = parentFormNameInput.value;
 
-				parentFormData += '&group_id=' + parentGroupDiv.attr("id");
-				console.log('parentFormData = ' + parentFormData);
+		        var parentFormFileInput = parentFormForm[1];
+		        var parentFormFile = parentFormFileInput.files[0];
+				
+				var fileData = new FormData();
+				fileData.append('file-0', parentFormFile);
+
+		        var parentGroupDiv = $(this).parent().parent().parent().parent(); // button, form, upload_file div, content div, * group div *
+		        var parentGroupId = parentGroupDiv.attr("id");
+
+				// parentFormData += '&group_id=' + parentGroupDiv.attr("id");
+
+				fileData.append("group_id", parentGroupId);
+				fileData.append("input_name", parentFormName);
+				fileData.append("file_name", parentFormFile.name);
+
+				$.ajax({
+		        	url: "http://nimsyllabus.com/cgi-bin/nimbus-accounts.py",
+				    data: fileData,
+				    cache: false,
+				    contentType: false,
+				    processData: false,
+				    type: 'POST',
+				    success: function(data){
+				        alert(data);
+				    }
+				});
 			});
 
 		});

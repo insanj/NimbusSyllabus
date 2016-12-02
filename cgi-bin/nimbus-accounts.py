@@ -54,14 +54,35 @@ stored_cookie_string = os.environ.get('HTTP_COOKIE') #look for a cookie
 # retrieve form data from GET request
 user_form = cgi.FieldStorage()
 
+if 'file-0' in user_form:
+	cookie = Cookie.SimpleCookie(stored_cookie_string)
+	if not 'account_cookie' in cookie:
+		print 'Content-Type: text/html\n\n' + 'No account found'
+	else:
+		username = cookie['account_cookie'].value
+		file_to_upload = user_form['file-0'].value
+		upload_group_id = user_form['group_id'].value
+		upload_input_name = user_form['input_name'].value
+		upload_file_name = user_form['file_name'].value
+
+		upload_file_dir = '../uploads/' + username + '/' + upload_group_id + '/'
+
+		if not os.path.exists(upload_file_dir):
+		    os.makedirs(upload_file_dir)
+
+		upload_file_path = os.path.join(upload_file_dir,  upload_file_name)
+
+		target_file = open(upload_file_path, 'w')
+		target_file.write(file_to_upload)
+		target_file.close()
+
+		print 'Content-Type: text/html\n\nWow such yay ' + upload_group_id + upload_file_name
+
 submit_value = user_form['submit'].value 
 
 if submit_value == 'EditGroup':
 	cookie = Cookie.SimpleCookie(stored_cookie_string)
 	if not 'account_cookie' in cookie:	
-		original_page = urllib.urlopen('http://nimsyllabus.com/index.html')
-		original_page_text = original_page.read()
-		augmented_text = original_page_text.replace('</body>', '<div class="message">Cannot find username for current account, please log in again.</div>' + '</body>')
 		print 'Content-Type: text/html\n\n' + 'No username found'
 	else:
 		username = cookie['account_cookie'].value
