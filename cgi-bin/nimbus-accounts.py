@@ -50,13 +50,13 @@ def groupsHTMLForUsername(username):
 
 
 def filesHTMLForUserGroup(username, group_id):
-	conn = sqlite3.connect('nimbus.db') # automatically creates file if doesn't exist
+	conn = sqlite3.connect('nimbus-files.db') # automatically creates file if doesn't exist
 	c = conn.cursor()
 	c.execute('SELECT * FROM files WHERE username=? AND group_id=? ORDER BY lastedit DESC', (username,group_id))
 
 	file_i = 0
 	result_string = '<div class="file_container">'
-	#c.execute('CREATE TABLE IF NOT EXISTS files(id INTEGER primary key, username varchar(250), group_id INTEGER, file_input_name varchar(250), file_path varchar(250), timestamp datetime, lastedit datetime)')
+	#c.execute('CREATE TABLE IF NOT EXISTS files(id INTEGER primary key, username varchar(250), group_id INTEGER, file_input_name varchar(250), file_path varchar(250), filetype, timestamp datetime, lastedit datetime)')
 
 	for file in c:
 		file_i = file_i + 1
@@ -64,11 +64,12 @@ def filesHTMLForUserGroup(username, group_id):
 		result_group_id = str(file[2])
 		result_input_name = str(file[3])
 		result_path = str(file[4])
-		result_edited_timestamp = str(file[6])
+		result_filetype = str(file[5])
+		result_edited_timestamp = str(file[7])
 		result_timeconverted = time.mktime(time.strptime(result_edited_timestamp, '%Y-%m-%d %H:%M:%S.%f'))
 		result_timestring = datetime.datetime.fromtimestamp(result_timeconverted).strftime('%m/%d/%Y')
 
-		result_string += '<a href="http://nimsyllabus.com/' + result_path + '" target=_blank><div class="file" id="' + result_file_id + '">' + result_input_name + '<p class="file_subtitle">Updated ' + result_timestring + '</p></div></a>'
+		result_string += '<a href="http://nimsyllabus.com/' + result_path + '" target=_blank><div class="file" type="' + result_filetype + '" id="' + result_file_id + '"><div class="file_delete">X</div>' + result_input_name + '<p class="file_subtitle">Updated ' + result_timestring + '</p></div></a>'
 		
 	result_string += '</div>'
 
@@ -92,6 +93,7 @@ if 'file-0' in user_form:
 		file_to_upload = user_form['file-0'].value
 		upload_group_id = user_form['group_id'].value
 		upload_input_name = user_form['input_name'].value
+		target_filetype = user_form['filetype'].value
 		upload_file_name = user_form['file_name'].value
 
 		upload_file_dir = '../uploads/' + username + '/' + upload_group_id + '/'
@@ -105,15 +107,15 @@ if 'file-0' in user_form:
 		target_file.write(file_to_upload)
 		target_file.close()
 
-		conn = sqlite3.connect('nimbus.db') # automatically creates file if doesn't exist
+		conn = sqlite3.connect('nimbus-files.db') # automatically creates file if doesn't exist
 		c = conn.cursor()
 		
 		current_time = datetime.datetime.now()
 
-		c.execute('CREATE TABLE IF NOT EXISTS files(id INTEGER primary key, username varchar(250), group_id INTEGER, file_input_name varchar(250), file_path varchar(250), timestamp datetime, lastedit datetime)')
+		c.execute('CREATE TABLE IF NOT EXISTS files(id INTEGER primary key, username varchar(250), group_id INTEGER, file_input_name varchar(250), file_path varchar(250), filetype varchar(250), timestamp datetime, lastedit datetime)')
 		conn.commit()
 
-		c.execute('INSERT INTO files (username, group_id, file_input_name, file_path, timestamp, lastedit) VALUES (?, ?, ?, ?, ?, ?)', (username, upload_group_id, upload_input_name, upload_file_path, current_time, current_time))
+		c.execute('INSERT INTO files (username, group_id, file_input_name, file_path, filetype, timestamp, lastedit) VALUES (?, ?, ?, ?, ?, ?, ?)', (username, upload_group_id, upload_input_name, upload_file_path, target_filetype, current_time, current_time))
 		conn.commit()
 
 		conn.close()
@@ -130,6 +132,28 @@ else:
 			username = cookie['account_cookie'].value
 			group_id = user_form['group_id'].value
 			print 'Content-Type: text/html\n\n' + filesHTMLForUserGroup(username, group_id)
+	elif submit_value == 'DeleteFile':
+		cookie = Cookie.SimpleCookie(stored_cookie_string)
+		if not 'account_cookie' in cookie:	
+			print 'Content-Type: text/html\n\n' + 'No account found'
+		else:
+			username = cookie['account_cookie'].value
+			fileId = user_form['id'].value
+			
+			conn = sqlite3.connect('nimbus-files.db')
+			c = conn.cursor()
+
+ 			c.execute('SELECT * FROM files WHERE id=?', (fileId,))
+ 			fileTarget = c.fetchone()
+ 			filepath_target = fileTarget[4]
+ 			os.remove(filepath_target)
+
+			c.execute('DELETE FROM files WHERE username=? AND id=?', (username, fileId))
+
+			conn.commit()
+			conn.close()
+
+			print 'Content-Type: text/html\n\nSuccess'
 	elif submit_value == 'EditGroup':
 		cookie = Cookie.SimpleCookie(stored_cookie_string)
 		if not 'account_cookie' in cookie:	
@@ -168,9 +192,6 @@ else:
 	elif submit_value == 'Delete':
 		cookie = Cookie.SimpleCookie(stored_cookie_string)
 		if not 'account_cookie' in cookie:	
-			original_page = urllib.urlopen('http://nimsyllabus.com/index.html')
-			original_page_text = original_page.read()
-			augmented_text = original_page_text.replace('</body>', '<div class="message">Cannot find username for current account, please log in again.</div>' + '</body>')
 			print 'Content-Type: text/html\n\n' + 'No username found'
 		else:
 			username = cookie['account_cookie'].value

@@ -247,6 +247,7 @@ a {
     border-radius: 7px;
     margin: 15px 15px 15px 0px;
     text-align: left;
+    float: left;
 
     height: auto;
     width: auto;
@@ -354,6 +355,7 @@ button:hover {
     display: inline;
     margin: 0px;
     padding: 0px;
+    
 }
 
 .file {
@@ -363,6 +365,7 @@ button:hover {
     vertical-align: top;
     margin: 15px 15px 15px 0px;
     text-align: left;
+    float: left;
 
     height: 124px;
     width: 150px;
@@ -372,9 +375,42 @@ button:hover {
     padding: 20px;
     font-weight: 600;
     pointer: cursor;
+
+    font-size: 24px;
+}
+
+.file:hover {
+    opacity: 0.99;
 }
 
 .file p {
     font-weight: 100;
     font-size: 15px;
+}
+
+.file[type='image/png'] {
+    background-color: green;
+}
+
+.file[type='image/pdf'] {
+    background-color: orange;
+}
+
+.file[type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'] {
+   background-color: pink;
+}
+
+.file[type='application/zip'] {
+   background-color: grey;
+}
+
+.file_delete {
+    width: 100%;
+    text-align:right;
+    font-family: sans-serif;
+    font-weight: 100;
+}
+
+.file_delete:hover {
+    color: red;
 }

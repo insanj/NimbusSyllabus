@@ -151,6 +151,7 @@
 				fileData.append("group_id", parentGroupId);
 				fileData.append("input_name", parentFormName);
 				fileData.append("file_name", parentFormFile.name);
+				fileData.append("filetype", parentFormFile.type);
 
 		        parentForm.find('.upload_file_submit').replaceWith('<div class="upload_loading">Uploading...</div>');
 
@@ -165,11 +166,36 @@
     					parentFormForm.reset();
 
     					parentForm.find('.upload_loading').replaceWith('<input class="upload_file_submit" type="submit" name="submit" value="Upload">');
+    					parentGroupDiv.find('.file_container').remove();
     					parentGroupDiv.find('.group_content').append(data);
 				    }
 				});
 			});
 
+			$('body').on('click', '.file_delete', function(e) {
+		        e.preventDefault();
+
+		        var fileDiv = $(this).parent();
+			    var fileId = fileDiv.attr("id"); /*$(this).attr("id");*/
+			    var fileData = {"submit" : "DeleteFile",
+			    				 "id" : fileId};
+
+				$.ajax({
+		        	url: "http://nimsyllabus.com/cgi-bin/nimbus-accounts.py",
+		        	type: "GET",
+		        	data: fileData,
+		        }).always(function(data, textStatus, jqXHR){
+		        	var trimmedResultString = $.trim(data);
+		        	if(trimmedResultString == 'Success'){
+		        		fileDiv.fadeOut("slow", function() {
+				        	fileDiv.remove();
+		        		});
+		        	}
+		        	else{
+				    	alert('Failed to delete: ' + trimmedResultString);
+		        	}
+	       		});		
+		    });
 		});
 		</script>
         
