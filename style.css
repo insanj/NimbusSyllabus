@@ -377,15 +377,30 @@ button:hover {
     pointer: cursor;
 
     font-size: 24px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .file:hover {
     opacity: 0.99;
 }
 
-.file p {
+.file div {
     font-weight: 100;
     font-size: 15px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file .file_name {
+    text-align: left;
+    font-weight: 500;
+}
+
+.file .file_subtitle {
+    text-align: left;
 }
 
 .file[type='image/png'] {
@@ -393,6 +408,10 @@ button:hover {
 }
 
 .file[type='image/pdf'] {
+    background-color: orange;
+}
+
+.file[type='application/pdf'] {
     background-color: orange;
 }
 

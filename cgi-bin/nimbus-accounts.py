@@ -68,8 +68,9 @@ def filesHTMLForUserGroup(username, group_id):
 		result_edited_timestamp = str(file[7])
 		result_timeconverted = time.mktime(time.strptime(result_edited_timestamp, '%Y-%m-%d %H:%M:%S.%f'))
 		result_timestring = datetime.datetime.fromtimestamp(result_timeconverted).strftime('%m/%d/%Y')
+		result_filename = os.path.basename(result_path)
 
-		result_string += '<a href="http://nimsyllabus.com/' + result_path + '" target=_blank><div class="file" type="' + result_filetype + '" id="' + result_file_id + '"><div class="file_delete">X</div>' + result_input_name + '<p class="file_subtitle">Updated ' + result_timestring + '</p></div></a>'
+		result_string += '<a href="http://nimsyllabus.com/' + result_path + '" target=_blank><div class="file" type="' + result_filetype + '" id="' + result_file_id + '"><div class="file_delete">X</div>' + result_input_name + '<div class="file_name">' + result_filename + '</div><div class="file_subtitle">Updated ' + result_timestring + '</div></div></a>'
 		
 	result_string += '</div>'
 
@@ -237,12 +238,7 @@ else:
 		conn.commit()
 		conn.close()
 
-		result_string = groupsHTMLForUsername(username)
-
-		original_page = urllib.urlopen('http://nimsyllabus.com/content.html')
-		original_page_text = original_page.read()
-		augmented_text = original_page_text.replace('</body>', result_string + '</body>')
-		print 'Content-Type: text/html\n\n' + augmented_text
+		print 'Content-Type: text/html\n\n' + groupsHTMLForUsername(username)
 	elif submit_value == '+ New Group':
 		if not stored_cookie_string:
 			original_page = urllib.urlopen('http://nimsyllabus.com/index.html')

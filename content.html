@@ -30,7 +30,53 @@
 	        });
 		}
 
+	 	function lookCookie(name){
+            var cookiepart = name + "=";
+     	    var ca = document.cookie.split(';');
+    	    for (var i = 0; i < ca.length; i++) {
+            	var c = ca[i];
+				while (c.charAt(0) == ' ') {
+               		c = c.substring(1);
+            	}
+            	
+            	if (c.indexOf(cookiepart) == 0) {
+            		//if the cookie is found return cookie
+                	return c.substring(cookiepart.length, c.length);
+            	}
+            	
+            	return "";
+            }
+		}
+
 		$(document).ready(function(){
+			var username = lookCookie('account_cookie');
+			console.log("username = " + username);
+
+	        if (username && username.length > 0) {
+	        	$.ajax({
+		        	url: "http://nimsyllabus.com/cgi-bin/nimbus-accounts.py", 
+		        	type: "GET",
+		        	data: 'submit=Cookie+Login&username=' + username,
+		        	success: function(data, textStatus, jqXHR){
+		        		console.log("success =" + data);
+		        		if ($('body').has('.group_container').length > 0) {
+							$(".group_container").replaceWith(data);
+		        		}
+
+		        		else {
+							$("body").append(data);
+		        		}
+
+						$('.group').each(function(i, obj) {
+							$(obj).append(groupButtonsString);
+							loadFilesForGroupDiv($(this).attr('id'));
+						});
+		       		}
+		        }).always(function(data, textStatus, jqXHR){
+		        	console.log("always " + data);
+		        });
+	        }
+
 			$('.group_form').bind('submit', function(e) {
 				$('.message').remove();
 
@@ -59,11 +105,6 @@
 		        });
 		    });
 
-		    $('.group').each(function(i, obj) {
-		    	$(obj).append(groupButtonsString);
-		    	loadFilesForGroupDiv($(this).attr('id'));
-			});
-			
 			$('body').on('click', '.group_delete', function(){
 				/*var buttonClass = $(this).attr('class');
 				if(buttonClass == 'group_delete'){
@@ -317,10 +358,10 @@
 		            }
 
 		            else {
-		            	var lazy_load_url = 'http://nimsyllabus.com/cgi-bin/nimbus-accounts.py?submit=Cookie+Login&username=' + username;
+		            	var lazy_load_url = 'http://nimsyllabus.com/content.html'
 
 		            	if (document.location.href != lazy_load_url) {
-			                document.location.href = 'http://nimsyllabus.com/cgi-bin/nimbus-accounts.py?submit=Cookie+Login&username=' + username;
+			                document.location.href = lazy_load_url;
 		            	}
 
 		            	else {
