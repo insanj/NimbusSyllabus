@@ -467,6 +467,10 @@ button:hover {
    background-color: #C396F5;
 }
 
+.file[type='audio/x-m4a'] {
+   background-color: #ffb372;
+}
+
 .file[type='text/markdown'] {
     background-color: #ff6f90;
 }
@@ -476,7 +480,8 @@ button:hover {
 }
 
 .file_delete {
-    width: 100%;
+    width: 10%;
+    margin-left: 90%;
     text-align: right;
     font-family: "HelveticaNeue-Bold", HelveticaNeue-Bold, Arial, sans-serif;
     font-weight: 600;

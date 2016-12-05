@@ -121,6 +121,12 @@ if 'file-0' in user_form:
 
 		conn.close()
 
+		groups_conn = sqlite3.connect('nimbus.db')
+		groups_curs = groups_conn.cursor()
+		groups_curs.execute('UPDATE groups SET lastedit=? WHERE username=? AND id=?', (current_time, username, upload_group_id))
+		groups_conn.commit()
+		groups_conn.close()
+
 		print 'Content-Type: text/html\n\n' + filesHTMLForUserGroup(username, upload_group_id)
 else:
 	submit_value = user_form['submit'].value 

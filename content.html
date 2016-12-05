@@ -293,6 +293,23 @@
 		        parentForm.find('.upload_file_submit').replaceWith('<div class="upload_loading">Uploading...</div>');
 
 				$.ajax({
+					/*beforeSend: function(request){
+						request.setRequestHeader('Content-Length', parentFormFile.size);
+            		},*/
+					// http://stackoverflow.com/questions/20095002/how-to-show-progress-bar-while-loading-using-ajax
+					xhr: function() {
+						var xhr = new window.XMLHttpRequest();
+						xhr.upload.addEventListener("progress", function(e){
+							console.log('progress=' + e);
+							if(e.lengthComputable){
+								var percentComplete = e.loaded / e.total;
+								var roundUpPercentComplete = Math.round(percentComplete * 100);
+						        $(parentForm).find('.upload_loading').text('Uploading... ' + roundUpPercentComplete + '%');
+							}
+						}, false);
+
+						return xhr;
+					},
 		        	url: "http://nimsyllabus.com/cgi-bin/nimbus-accounts.py",
 				    data: fileData,
 				    cache: false,
@@ -301,11 +318,12 @@
 				    type: 'POST',
 		        	success: function(data, textStatus, jqXHR){
     					parentFormForm.reset();
-
-    					parentForm.find('.upload_loading').replaceWith('<input class="upload_file_submit" type="submit" name="submit" value="Upload">');
     					parentGroupDiv.find('.file_container').remove();
     					parentGroupDiv.find('.group_content').append(data);
 				    }
+				}).always(function(data, textStatus, jqXHR){
+					$(parentForm).find('.upload_loading').replaceWith('<input class="upload_file_submit" type="submit" name="submit" value="Upload">');
+
 				});
 			});
 
