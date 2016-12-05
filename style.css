@@ -378,25 +378,29 @@ button:hover {
 
     font-size: 24px;
 
+    word-wrap: break-word;  
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .file:hover {
-    opacity: 0.99;
+    box-shadow: 0px 0px 10px #888888;
 }
 
 .file div {
     font-weight: 100;
     font-size: 15px;
-
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .file .file_name {
     text-align: left;
     font-weight: 500;
+
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .file .file_subtitle {
@@ -407,8 +411,16 @@ button:hover {
     background-color: green;
 }
 
+.file[type='image/jpeg'] {
+    background-color: #52c5c5;
+}
+
 .file[type='image/pdf'] {
     background-color: orange;
+}
+
+.file[type='image/gif'] {
+    background-color: #e63939;
 }
 
 .file[type='application/pdf'] {
@@ -423,11 +435,19 @@ button:hover {
    background-color: grey;
 }
 
+.file[type='audio/mp3'] {
+   background-color: #C396F5;
+}
+
+.file[type='application/x-iwork-pages-sffpages'] {
+   background-color: maroon;
+}
+
 .file_delete {
     width: 100%;
-    text-align:right;
-    font-family: sans-serif;
-    font-weight: 100;
+    text-align: right;
+    font-family: "HelveticaNeue-Bold", HelveticaNeue-Bold, Arial, sans-serif;
+    font-weight: 600;
 }
 
 .file_delete:hover {
