@@ -419,6 +419,10 @@ button:hover {
     background-color: orange;
 }
 
+.file[type='image/vnd.microsoft.icon'] {
+    background-color: #6ae089;
+}
+
 .file[type='image/gif'] {
     background-color: #e63939;
 }
@@ -427,8 +431,32 @@ button:hover {
     background-color: orange;
 }
 
+.file[type='text/x-python-script'] {
+    background-color: #0010d4;
+}
+
+.file[type='text/rtf'] {
+    background-color: #b7dbfb;
+}
+
+.file[type='text/html'] {
+    background-color: #cacc83;
+}
+
+.file[type='text/css'] {
+    background-color: #fdddac;
+}
+
+.file[type='text/javascript'] {
+    background-color: #ffb1eb;
+}
+
 .file[type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'] {
    background-color: pink;
+}
+
+.file[type='application/java-archive'] {
+   background-color: #583758;
 }
 
 .file[type='application/zip'] {
@@ -437,6 +465,10 @@ button:hover {
 
 .file[type='audio/mp3'] {
    background-color: #C396F5;
+}
+
+.file[type='text/markdown'] {
+    background-color: #ff6f90;
 }
 
 .file[type='application/x-iwork-pages-sffpages'] {

@@ -12,7 +12,7 @@ import os
 # import httplib
 from random import randint
 #import cookielib
-
+import shutil
 
 def groupsHTMLForUsername(username):
 	conn = sqlite3.connect('nimbus.db') # automatically creates file if doesn't exist
@@ -70,7 +70,7 @@ def filesHTMLForUserGroup(username, group_id):
 		result_timestring = datetime.datetime.fromtimestamp(result_timeconverted).strftime('%m/%d/%Y')
 		result_filename = os.path.basename(result_path)
 
-		result_string += '<a href="http://nimsyllabus.com/' + result_path + '" target=_blank><div class="file" type="' + result_filetype + '" id="' + result_file_id + '"><div class="file_delete">X</div>' + result_input_name + '<div class="file_name">' + result_filename + '</div><div class="file_subtitle">Updated ' + result_timestring + '</div></div></a>'
+		result_string += '<a href="http://nimsyllabus.com/' + result_path + '" title="' + result_filetype + '" target=_blank><div class="file" type="' + result_filetype + '" id="' + result_file_id + '"><div class="file_delete">X</div>' + result_input_name + '<div class="file_name">' + result_filename + '</div><div class="file_subtitle">Updated ' + result_timestring + '</div></div></a>'
 		
 	result_string += '</div>'
 
@@ -200,19 +200,20 @@ else:
 			
 			conn = sqlite3.connect('nimbus.db') # automatically creates file if doesn't exist
 			c = conn.cursor()
-			
-			#c.execute("SELECT * FROM groups WHERE username='?'' AND id=?', (username, groupId))
-			#if c.rowcount <= 0:
-			#	conn.commit()
-			#	conn.close()
-			#	print 'Content-Type: text/html\n\n' + str(c.rowcount) + ' groups found for username=' + username + ' and id=' + groupId
-			#else:
 			c.execute('DELETE FROM groups WHERE username=? AND id=?', (username, groupId))
 			conn.commit()
 			conn.close()
 
-			#result_string = '<div class="message">Deleted group successfully.</div>'
-			#result_string += groupsHTMLForUsername(username)
+			filesconn = sqlite3.connect('nimbus-files.db') # automatically creates file if doesn't exist
+			filescur = filesconn.cursor()
+			filescur.execute('DELETE FROM files WHERE username=? AND group_id=?', (username, groupId))
+			filesconn.commit()
+			filesconn.close()
+
+			group_dir_path = '../uploads/' + username + '/' + groupId
+
+			if os.path.exists(group_dir_path):
+ 				shutil.rmtree(group_dir_path)
 
 			print 'Content-Type: text/html\n\nSuccess'
 	elif submit_value == 'Logout':
