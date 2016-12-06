@@ -31,7 +31,11 @@ def groupsHTMLForUsername(username):
 		result_group_timestring = datetime.datetime.fromtimestamp(result_group_timeconverted).strftime('%m/%d/%Y')
 
 		# result_group_timestring = result_group_timeconverted.strftime("%d/%m/%y")
-		result_string += '<div class="group" id="' + result_group_id + '" style="color:' + result_group_color + '">' + result_group_name + '<p class="group_subtitle"> Updated ' + result_group_timestring + '</p></div>'
+		result_group_display_string = 'shown' #((str(group[6]) == "1") ? 'none' : 'normal');
+		if group[6] == 1:
+			result_group_display_string = 'hidden'
+
+		result_string += '<div class="group" id="' + result_group_id + '" type="' + result_group_display_string + '" style="color:' + result_group_color + '">' + result_group_name + '<p class="group_subtitle"> Updated ' + result_group_timestring + '</p></div>'
 
 	if group_i == 0:
 		result_string += '<div class="message">No groups yet :)</div>'
@@ -161,6 +165,36 @@ else:
 			conn.close()
 
 			print 'Content-Type: text/html\n\nSuccess'
+	elif submit_value == 'HideGroup':
+		cookie = Cookie.SimpleCookie(stored_cookie_string)
+		if not 'account_cookie' in cookie:	
+			print 'Content-Type: text/html\n\n' + 'No account found'
+		else:
+			username = cookie['account_cookie'].value
+			group_id = user_form['group_id'].value
+
+			conn = sqlite3.connect('nimbus.db') # automatically creates file if doesn't exist
+			c = conn.cursor()
+			c.execute('UPDATE groups SET hidden=? WHERE username=? AND id=?', (1, username, group_id))
+			conn.commit()
+			conn.close()
+
+			print 'Content-Type: text/html\n\nSuccess'
+	elif submit_value == 'ShowGroup':
+		cookie = Cookie.SimpleCookie(stored_cookie_string)
+		if not 'account_cookie' in cookie:	
+			print 'Content-Type: text/html\n\n' + 'No account found'
+		else:
+			username = cookie['account_cookie'].value
+			group_id = user_form['group_id'].value
+
+			conn = sqlite3.connect('nimbus.db') # automatically creates file if doesn't exist
+			c = conn.cursor()
+			c.execute('UPDATE groups SET hidden=? WHERE username=? AND id=?', (0, username, group_id))
+			conn.commit()
+			conn.close()
+
+			print 'Content-Type: text/html\n\nSuccess'
 	elif submit_value == 'EditGroup':
 		cookie = Cookie.SimpleCookie(stored_cookie_string)
 		if not 'account_cookie' in cookie:	
@@ -241,7 +275,7 @@ else:
 		username = user_form['username'].value
 		current_time = datetime.datetime.now()
 
-		c.execute('CREATE TABLE IF NOT EXISTS groups(id INTEGER primary key, username varchar(250), group_name varchar(250), group_color varchar(250), timestamp datetime, lastedit datetime)')
+		c.execute('CREATE TABLE IF NOT EXISTS groups(id INTEGER primary key, username varchar(250), group_name varchar(250), group_color varchar(250), timestamp datetime, lastedit datetime, hidden INTEGER)')
 		conn.commit()
 		conn.close()
 
@@ -275,7 +309,7 @@ else:
 
 				current_time = datetime.datetime.now()
 
-				c.execute('CREATE TABLE IF NOT EXISTS groups(id INTEGER primary key, username varchar(250), group_name varchar(250), group_color varchar(250), timestamp datetime, lastedit datetime)')
+				c.execute('CREATE TABLE IF NOT EXISTS groups(id INTEGER primary key, username varchar(250), group_name varchar(250), group_color varchar(250), timestamp datetime, lastedit datetime, hidden INTEGER)')
 				c.execute('INSERT INTO groups (username, group_name, group_color, timestamp, lastedit) VALUES (?, ?, ?, ?, ?)', (username, group_name, group_color, current_time, current_time))
 				conn.commit()
 
