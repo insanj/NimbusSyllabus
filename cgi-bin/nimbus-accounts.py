@@ -112,6 +112,10 @@ if 'file-0' in user_form:
 		target_file.write(file_to_upload)
 		target_file.close()
 
+		# redirect people who go to folder in .htaccess
+		# ErrorDocument 404 http://www.nimsyllabus.com/
+		# RedirectMatch 301 ^/uploads/ http://www.nimsyllabus.com/
+
 		conn = sqlite3.connect('nimbus-files.db') # automatically creates file if doesn't exist
 		c = conn.cursor()
 		

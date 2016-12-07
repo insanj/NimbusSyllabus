@@ -66,7 +66,6 @@
 		function loadFilesForGroupArray(group_array, group_index) {
 			// console.log("loadFilesForGroupArray(" + group_array + ", " + group_index + ")");
 			var current_group_div = $(group_array)[group_index];
-			$(current_group_div).append(groupButtonsString);
 
 			var current_group_id = $(current_group_div).attr('id');
 			var loadGroupData = "submit=Files&group_id=" + current_group_id;
@@ -79,6 +78,7 @@
 	        		var trimmedResultString = $.trim(data);
 					// console.log("loadFilesForGroupArray - success <" + trimmedResultString + ">");
 
+					$(current_group_div).append(groupButtonsString);
 	        		if(trimmedResultString != "Fail") {
 	        			//var groupDiv = $(".group_container").find('#' + current_group_id);
 
