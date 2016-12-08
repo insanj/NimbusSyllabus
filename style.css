@@ -71,7 +71,7 @@ a:hover {
 }
 
 .faq-container {
-    padding: 50px;
+    padding: 100px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -274,7 +274,7 @@ a {
     background-color: #6E89E0;
     display: inline-block;
     border-radius: 7px;
-    margin: 15px 15px 15px 0px;
+    margin: 10px 10px 0px 0px; /* top right bottom left */
     text-align: left;
     float: left;
 
@@ -395,7 +395,7 @@ button:hover {
     display: inline-block;
     border-radius: 7px;
     vertical-align: top;
-    margin: 15px 15px 15px 0px;
+    margin: 10px 10px 0px 0px; /* top right bottom left */
     text-align: left;
     float: left;
 
@@ -515,8 +515,7 @@ button:hover {
     width: 10%;
     margin-left: 90%;
     text-align: right;
-    font-family: "HelveticaNeue-Bold", HelveticaNeue-Bold, Arial, sans-serif;
-    font-weight: 600;
+    font-family: Arial, sans-serif;
 }
 
 .file_delete:hover {
